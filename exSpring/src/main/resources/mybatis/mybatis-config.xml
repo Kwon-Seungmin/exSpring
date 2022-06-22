@@ -7,12 +7,12 @@
 
 
     <typeAliases>
-        <package name="com.Board.dto.dto"/>
+        <package name="com.Board.dto.Mmbrdto"/>
     </typeAliases>
 
+<!--     <typeAliases>
+    	<package name="com.Board.dto.RestDTO"/>
+    </typeAliases> -->
 
-<!-- 		<typeAliases> -->
-<!-- 		 	<typeAliase type="com.Board.dto.BoardDto" alias="BoardDto" /> -->
-<!-- 		</typeAliases> -->
 
 </configuration>

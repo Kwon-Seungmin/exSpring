@@ -4,11 +4,10 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.Board.dto.BoardDto;
+import com.Board.dto.RestDTO;
 
 @Mapper
-public interface DateMapper {
+public interface RestMapper {
 
-    String selectDate();
-   
+	List<RestDTO> selectRestList();
 }
