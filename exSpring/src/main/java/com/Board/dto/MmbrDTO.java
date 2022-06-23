@@ -12,5 +12,4 @@ public class MmbrDTO {
 	String userName;
 	String userId;
 	String userHate;
-
 }

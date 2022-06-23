@@ -51,10 +51,6 @@
       <button id="cant">비교하기</button>
       <button id="reset">리셋하기</button>
       <p id="lunch">?</p>
-      <input type="button" id="NORMAL" value="일반지도" class="control-btn">
-      <input type="button" id="TERRAIN" value="지형도" class="control-btn">
-      <input type="button" id="SATELLITE" value="위성지도" class="control-btn">
-      <input type="button" id="HYBRID" value="겹쳐보기" class="control-btn control-on">
     </div>
     </div>
 
@@ -62,7 +58,7 @@
     <div class="grid-2">
       <div id="map" style="width:100%;height:80vh;">
 
-       
+
       </div>
 
     </div>
@@ -95,7 +91,7 @@ var markerLayer;
 
     ///////////////////
 
-    //검색어 목록    
+    //검색어 목록
     var items = [
       {
         "title": "고기명작 관평점",
@@ -376,7 +372,7 @@ var markerLayer;
         }
       }
       make_randN();
-      addMarker();
+
     }
 
     document.getElementById("reset").addEventListener('click', click_reset);
@@ -389,10 +385,11 @@ var markerLayer;
       let randN = Math.floor((Math.random() * 10 + 1)) % lunchList.length;
       console.log(randN)
       console.log(lunchList[randN])
+      addMarker();
     }
-    
-    
-    
+
+
+
 
 
 
@@ -411,7 +408,6 @@ var markerLayer;
       markerSource.addFeature(point_feature);
     }
 
-    // markerSource.addFeature(point_feature);
 
     var markerStyle = new ol.style.Style({
       image: new ol.style.Icon({
@@ -424,7 +420,7 @@ var markerLayer;
       //html의 css, z-index 기능이다.
       zindex: 10
     });
-    
+
     //마커 레이어 생성
     markerLayer = new ol.layer.Vector({
       source: markerSource, //마커 feature 들

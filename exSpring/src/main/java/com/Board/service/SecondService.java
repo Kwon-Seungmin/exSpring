@@ -5,5 +5,6 @@ import java.util.List;
 import com.Board.dto.RestDTO;
 
 public interface SecondService {
-	public List<RestDTO> hello();
+	public List<RestDTO> restList();
+
 }

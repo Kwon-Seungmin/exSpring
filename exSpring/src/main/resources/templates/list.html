@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="EUC-KR" />
+
+<meta th:include="include/header::header"
+     th:remove="tag"></meta>
+<title>Insert title here</title>
+
+
+</head>
+<body>
+
+<div>식당 목록</div>
+<table border="1">
+	<tr>
+		<th>id</th>
+		<th>name</th>
+		<th>addr</th>
+		<th>tel</th>
+		<th>time</th>
+		<th>category</th>
+		<th>link</th>
+		<th>lon</th>
+		<th>lat</th>
+		<th>last</th>
+	</tr>
+	<tr th:each="row:${list}">
+		<td><span th:text="${row.restId}"></span></td>
+		<td><span th:text="${row.restName}"></span></td>
+		<td><span th:text="${row.restAddr}"></span></td>
+		<td><span th:text="${row.restTel}"></span></td>
+		<td><span th:text="${row.restTime}"></span></td>
+		<td><span th:text="${row.restCategory}"></span></td>
+		<td><span th:text="${row.restLink}"></span></td>
+		<td><span th:text="${row.restLon}"></span></td>
+		<td><span th:text="${row.restLat}"></span></td>
+		<td><span th:text="${row.restLast}"></span></td>
+	</tr>
+</table>
+</body>
+</html>

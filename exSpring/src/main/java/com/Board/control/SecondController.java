@@ -17,13 +17,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/second")
 public class SecondController {
-	private final SecondService secondService;
-
-	@GetMapping("/rest")
-	public ResponseEntity<List<RestDTO>> getSecond(){
-		List<RestDTO> result = secondService.hello();
-		return new ResponseEntity<List<RestDTO>>(result, HttpStatus.OK);
-	}
-
+	/*
+	 * private final SecondService secondService;
+	 *
+	 * @GetMapping("/rest") public ResponseEntity<List<RestDTO>> getSecond(){
+	 * List<RestDTO> result = secondService.hello(); return new
+	 * ResponseEntity<List<RestDTO>>(result, HttpStatus.OK); }
+	 */
 
 }

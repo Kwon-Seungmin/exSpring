@@ -21,11 +21,12 @@ public class StoresController {
 	public String callApi() throws IOException {
 		StringBuilder result = new StringBuilder();
 
-		int i = 2;
+
 
 		String urlStr = "http://bigdata.daejeon.go.kr/api/stores?"
-				+ "page=" + i;
+				+ "page=1" ;
 		URL url = new URL(urlStr);
+
 
 		HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 		urlConnection.setRequestMethod("GET");

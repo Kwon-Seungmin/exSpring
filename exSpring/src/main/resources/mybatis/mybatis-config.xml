@@ -6,13 +6,13 @@
 <configuration>
 
 
-    <typeAliases>
+   <!--  <typeAliases>
         <package name="com.Board.dto.Mmbrdto"/>
-    </typeAliases>
-
-<!--     <typeAliases>
-    	<package name="com.Board.dto.RestDTO"/>
     </typeAliases> -->
+
+ <typeAliases>
+    	<package name="com.Board.dto.RestDTO"/>
+    </typeAliases>
 
 
 </configuration>
