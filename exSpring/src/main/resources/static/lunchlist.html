@@ -6,11 +6,13 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"
-    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.14.1/build/ol.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.14.1/css/ol.css"
     type="text/css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="vueexam.js"></script>
+  
   <style>
    .map {
     width: 80%;
@@ -38,8 +40,8 @@
 <body>
   <div class="grid-container">
     <div class="grid-1">
-      <div class="sidebar">
-      <button id="load">불러오기</button>
+      <div class="sidebar" id="restwrap">
+      <button id="btnLoad">불러오기</button>
       <P id="result">asd</P>
 
       <input type="checkbox" text="Kim" id="ch_Kim">
@@ -48,8 +50,8 @@
       <label for="ch_Lee">Lee</label>
       <input type="checkbox" value="Park" id="ch_Park">
       <label for="ch_Park">Park</label>
-      <button id="cant">비교하기</button>
-      <button id="reset">리셋하기</button>
+      <button id="btnCompare">비교하기</button>
+      <button id="btnReset">리셋하기</button>
       <p id="lunch">?</p>
     </div>
     </div>
@@ -72,7 +74,6 @@ var markerLayer;
     });
 
 
-
     var map = new ol.Map({
       target: 'map',
       layers: [
@@ -87,348 +88,7 @@ var markerLayer;
       })
     });
 
-
-
-    ///////////////////
-
-    //검색어 목록
-    var items = [
-      {
-        "title": "고기명작 관평점",
-        "link": "",
-        "category": "한식>육류,고기요리",
-        "description": "",
-        "telephone": "",
-        "address": "대전광역시 유성구 관평동 1102 1층",
-        "roadAddress": "대전광역시 유성구 관들2길 72-16 1층",
-        "latitude": "36.42460376",
-        "longitude": "127.3916809",
-        "keyword": "hot",
-      },
-      {
-        "title": "맛찬들왕소금구이 대전관평점",
-        "link": "",
-        "category": "한식>육류,고기요리",
-        "description": "",
-        "telephone": "",
-        "address": "대전광역시 유성구 관평동 951",
-        "roadAddress": "대전광역시 유성구 관평2로 7-5",
-        "latitude": "36.42548509",
-        "longitude": "127.3914779"
-      },
-      {
-        "title": "택이네조개전골 관평점",
-        "link": "",
-        "category": "음식점>한식>해물,생선요리>조개요리",
-        "description": "",
-        "telephone": "",
-        "address": "대전광역시 유성구 관평동 1090",
-        "roadAddress": "대전광역시 유성구 관들2길 8-19 택이네조개전골",
-        "latitude": "36.42428779",
-        "longitude": "127.3915154"
-      },
-      {
-        "title": "솔밭묵집",
-        "link": "https://www.instagram.com/solbat_mj/",
-        "category": "음식점>한식",
-        "description": "",
-        "telephone": "",
-        "address": "대전광역시 유성구 관평동 542-5",
-        "roadAddress": "대전광역시 유성구 관용로 51",
-        "latitude": "36.41488107",
-        "longitude": "127.3824104",
-        "keyword": "hot"
-      },
-      {
-        "title": "소도둑 대전관평점",
-        "link": "",
-        "category": "음식점>한식>육류,고기요리>소고기구이",
-        "description": "",
-        "telephone": "",
-        "address": "대전광역시 유성구 관평동 981 1층",
-        "roadAddress": "대전광역시 유성구 관들2길 21 1층",
-        "latitude": "345558",
-        "longitude": "425120"
-      },
-      {
-        "title": "그린베이커리",
-        "link": "http://www.instagram.com/bbangho1",
-        "category": "카페,디저트>베이커리",
-        "description": "",
-        "telephone": "",
-        "address": "대전광역시 유성구 관평동 816",
-        "roadAddress": "대전광역시 유성구 테크노4로 98-8 평원오피스텔 101호 그린베이커리",
-        "latitude": "345426",
-        "longitude": "425258"
-      },
-      {
-        "title": "라베리타",
-        "link": "http://blog.naver.com/bonappetit_dj",
-        "category": "음식점>이탈리아음식",
-        "description": "",
-        "telephone": "",
-        "address": "대전광역시 유성구 관평동 872 1층 라베리타",
-        "roadAddress": "대전광역시 유성구 관들1길 31 1층 라베리타",
-        "latitude": "36.42625974",
-        "longitude": "127.3887101"
-      },
-      {
-        "title": "렌토",
-        "link": "http://www.instagram.com/lento_official",
-        "category": "음식점>카페,디저트",
-        "description": "",
-        "telephone": "",
-        "address": "대전광역시 유성구 관평동 562-2",
-        "roadAddress": "대전광역시 유성구 관용로31번길 33",
-        "latitude": "36.4171852",
-        "longitude": "127.3815478"
-      },
-      {
-        "title": "샤브향 대전테크노점",
-        "link": "http://instagram.com/hong_jeemin",
-        "category": "일식>샤브샤브",
-        "description": "",
-        "telephone": "",
-        "address": "대전광역시 유성구 관평동 798",
-        "roadAddress": "대전광역시 유성구 테크노중앙로 55 에이스타워",
-        "latitude": "36.42645421",
-        "longitude": "127.3917376"
-      },
-      {
-        "title": "<b>관평동</b> 행정복지센터",
-        "link": "",
-        "category": "공공,사회기관>행정복지센터",
-        "description": "",
-        "telephone": "",
-        "address": "대전광역시 유성구 관평동 906",
-        "roadAddress": "대전광역시 유성구 관평2로 42",
-        "latitude": "345384",
-        "longitude": "424879"
-      },
-      {
-        "title": "띠울석갈비 <b>테크노</b>점",
-        "link": "",
-        "category": "한식>육류,고기요리",
-        "description": "",
-        "telephone": "",
-        "address": "대전광역시 유성구 관평동 748",
-        "roadAddress": "대전광역시 유성구 테크노4로 57",
-        "latitude": "36.42892443",
-        "longitude": "127.3921391"
-      },
-      {
-        "title": "리얼케익 <b>테크노</b>점",
-        "link": "http://www.realcake.co.kr",
-        "category": "카페,디저트>케이크전문",
-        "description": "",
-        "telephone": "",
-        "address": "대전광역시 유성구 관평동 812",
-        "roadAddress": "대전광역시 유성구 테크노4로 94",
-        "latitude": "36.42625976",
-        "longitude": "127.3897655"
-      },
-      {
-        "title": "인디 <b>테크노</b>밸리점",
-        "link": "http://www.indyfood.co.kr/",
-        "category": "음식점>인도음식",
-        "description": "",
-        "telephone": "",
-        "address": "대전광역시 유성구 관평동  806",
-        "roadAddress": "대전광역시 유성구 테크노중앙로 32",
-        "latitude": "36.42697966",
-        "longitude": "127.3891363"
-      },
-      {
-        "title": "<b>테크노</b>도담한의원",
-        "link": "http://blog.naver.com/technododam",
-        "category": "병원,의원>한의원",
-        "description": "",
-        "telephone": "",
-        "address": "대전광역시 유성구 관평동 937 티플라자 4층",
-        "roadAddress": "대전광역시 유성구 테크노4로 105 티플라자 4층",
-        "latitude": "345461",
-        "longitude": "425117"
-      },
-      {
-        "title": "에리카플라워",
-        "link": "http://pjhkk883.blog.me/",
-        "category": "생활,편의>꽃집,꽃배달",
-        "description": "",
-        "telephone": "",
-        "address": "대전광역시 유성구 관평동 921 아카데미프라자 1층",
-        "roadAddress": "대전광역시 유성구 관평2로 26 아카데미프라자 1층",
-        "latitude": "345461",
-        "longitude": "425017"
-      },
-      {
-        "title": "엉클부대찌개 <b>테크노</b>점",
-        "link": "",
-        "category": "한식>찌개,전골",
-        "description": "",
-        "telephone": "",
-        "address": "대전광역시 유성구 관평동 1038",
-        "roadAddress": "대전광역시 유성구 관들3길 77-32",
-        "latitude": "36.42391291",
-        "longitude": "127.3903243"
-      },
-      {
-        "title": "챌린저휘트니스",
-        "link": "http://blog.naver.com/challenger2015",
-        "category": "스포츠시설>헬스장",
-        "description": "",
-        "telephone": "",
-        "address": "대전광역시 유성구 관평동 943 남정빌딩 8층",
-        "roadAddress": "대전광역시 유성구 테크노중앙로 54",
-        "latitude": "345617",
-        "longitude": "425209"
-      }
-    ]
-
-    //사람 목록
-    var human = {
-      "Kim": {
-        "name": "Kim-Minsu",
-        "hate": "고기"
-      },
-      "Lee": {
-        "name": "Lee-Minsu",
-        "hate": "전골"
-      },
-      "Park": {
-        "name": "Park-Minsu",
-        "hate": "인도"
-      }
-    }
-
-
-    function isRest(element) {
-      if (element.category.substring(0, 3) == "한식")
-        return element;
-    }
-    var a;
-    let sCategory = '식';
-
-    a = items.filter(items => items.category.includes(sCategory));
-    //a = items.filter(items => items.category.substring(0,3)=='음식점');
-    // a = items.filter(isRest);
-    var s = "12344";
-    document.getElementById("load").addEventListener('click', function () {
-      document.getElementById("result").innerHTML = JSON.stringify(a);
-    });
-
-    var i;
-    let lunchList = [];
-    let randN = 0;
-
-
-    document.getElementById("cant").addEventListener('click', click_human);
-    //먹기싫은거 빼기
-    function click_human() {
-      click_reset();
-      for (i = 0; i < a.length; i++) {
-        if (ch_Kim.checked == true) {
-          if (a[i].category.includes(human.Kim.hate) == false) {
-
-            if (ch_Lee.checked == true) {
-              if (a[i].category.includes(human.Lee.hate) == false) {
-
-                if (ch_Park.checked == true) {
-                  if (a[i].category.includes(human.Park.hate) == false) {
-                    lunchList.push(a[i]);
-                    console.log("111")
-                  }
-                } else {
-                  lunchList.push(a[i]);
-                  console.log("110")
-                }
-              }
-            } else if (ch_Park.checked == true) {
-              if (a[i].category.includes(human.Park.hate) == false) {
-                lunchList.push(a[i]);
-                console.log("101")
-              }
-            } else {
-              lunchList.push(a[i]);
-              console.log("100")
-            }
-          }
-        } else if (ch_Lee.checked == true) {
-          if (a[i].category.includes(human.Lee.hate) == false) {
-            if (ch_Park.checked == true) {
-              if (a[i].category.includes(human.Park.hate) == false) {
-                lunchList.push(a[i]);
-                console.log("011")
-              }
-            } else {
-              lunchList.push(a[i]);
-              console.log("010")
-            }
-          }
-        } else if (ch_Park.checked == true) {
-          if (a[i].category.includes(human.Park.hate) == false) {
-            lunchList.push(a[i]);
-            console.log("001");
-          }
-        }
-      }
-      make_randN();
-
-    }
-
-    document.getElementById("reset").addEventListener('click', click_reset);
-
-    function click_reset() {
-      lunchList = [];
-    }
-
-    function make_randN() {
-      let randN = Math.floor((Math.random() * 10 + 1)) % lunchList.length;
-      console.log(randN)
-      console.log(lunchList[randN])
-      addMarker();
-    }
-
-
-
-
-
-
-    //마커 소스
-    var markerSource = new ol.source.Vector();
-
-    // addMarker();
-
-    //마커 함수
-    function addMarker() {
-      //좌표
-      var point_feature = new ol.Feature({
-        geometry: new ol.geom.Point([lunchList[randN].longitude ,
-      lunchList[randN].latitude]).transform('EPSG:4326','EPSG:3857')
-      });
-      markerSource.addFeature(point_feature);
-    }
-
-
-    var markerStyle = new ol.style.Style({
-      image: new ol.style.Icon({
-        opacity: 1,//투명도 1 = 100%
-        scale:0.1,//크기 1 = 100%
-
-        //marker 이미지, 해당 point를 marker로 변경한다.
-        src: './marker04.png'
-      }),
-      //html의 css, z-index 기능이다.
-      zindex: 10
-    });
-
-    //마커 레이어 생성
-    markerLayer = new ol.layer.Vector({
-      source: markerSource, //마커 feature 들
-      style: markerStyle // 마커 스타일
-    });
-
-    // 지도에 마커가 그려진 레이어 추가
-    map.addLayer(markerLayer);
+   
   </script>
 </body>
 

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="vue.js"></script>
+</head>
+<body>
+
+    <div id="ctrlWrap">
+        <button type="button" id="btnLoad">불러오기</button>
+        <button type="button" id="btnClear">초기화</button>
+        <label><input type="radio" name="category" value="" checked="checked">ALL</label>
+        <label><input type="radio" name="category" value="한식">한식</label>
+        <label><input type="radio" name="category" value="중식">중식</label>
+        <label><input type="radio" name="category" value="양식">양식</label>
+        <label><input type="radio" name="category" value="일식">일식</label>
+    </div>
+
+    <div id="lunchWrap">
+        <table>
+            <tr
+                v-if="lunchList.length > 0"
+                v-for="(lunch, index) in lunchList"
+            >
+                <td>{{lunch.name}}</td>
+                <td>{{lunch.category}}</td>
+                <td>{{lunch.price}}</td>
+            </tr>
+            <tr
+                v-if="lunchList.length == 0">
+                <td>결과가 없습니다.</td>
+
+            </tr>
+        </table>
+
+    </div>
+</body>
+</html>
