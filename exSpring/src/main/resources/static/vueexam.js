@@ -4,10 +4,13 @@ let restVue;
 document.addEventListener('DOMContentLoaded', () => {
     //button click event
     document.getElementById('btnLoad').addEventListener('click', e =>{
-        console.log('compare');
+        console.log('load');
 
         restVue.list();
     });
+    document.getElementById('btnCompare').addEventListener('click', e => {
+        console.log('compare')
+    })
     document.getElementById('btnReset').addEventListener('click', e => {
         console.log('reset');
 

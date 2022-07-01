@@ -10,4 +10,6 @@ import com.Board.dto.RestDTO;
 @Mapper
 public interface RestMapper {
 	List<RestDTO> selectRestList();
+
+	List<RestDTO> selectRest();
 }

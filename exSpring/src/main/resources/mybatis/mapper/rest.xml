@@ -5,6 +5,12 @@
 		SELECT *
 		FROM rest
 	</select>
+
+	<select id="selectRest" resultType="com.Board.dto.RestDTO">
+		SELECT *
+		FROM rest
+		WHERE rest_id = '13752';
+	</select>
 </mapper>
 
 

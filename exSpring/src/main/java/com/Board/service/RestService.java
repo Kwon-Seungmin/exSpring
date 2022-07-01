@@ -4,8 +4,6 @@ import java.util.List;
 
 import com.Board.dto.RestDTO;
 
-public interface SecondService {
-	public List<RestDTO> restList();
-
-
+public interface RestService {
+	public List<RestDTO> rest();
 }
