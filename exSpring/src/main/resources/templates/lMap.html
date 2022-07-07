@@ -10,128 +10,118 @@
     <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.14.1/css/ol.css" type="text/css">
     <script src="test.js"></script>
-    <style>
-        .map {
-            width: 80%;
-            height: 100%;
-        }
+    <link rel="stylesheet" href="style.css">
 
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-        }
-
-        .grid-container {
-            display: grid;
-            grid-template-columns: 30vw 70vw;
-            grid-template-rows: 100vw;
-        }
-
-        .slider {
-            margin-left: 30px;
-        }
-    </style>
 </head>
 
 <body>
     <div class="grid-container">
         <div class="grid-1">
-            <div class="sidebar">
-                <div id="ctrlWrap">
-                    <button type="button" id="btnLoad">불러오기</button>
-                    <button type="button" id="btnClear">초기화</button>
-                    <label><input type="radio" name="category" value="" checked="checked">ALL</label>
-                    <label><input type="radio" name="category" value="한식">한식</label>
-                    <label><input type="radio" name="category" value="중식">중식</label>
-                    <label><input type="radio" name="category" value="양식">양식</label>
-                    <label><input type="radio" name="category" value="일식">일식</label>
-                </div>
 
-                <div id="lunchWrap">
-                <table>
-                <tr v-if="restList.length>0"
-                	v-for="(rest,index) in restList"
-                	>
-                <td>restId : {{rest.restName}}</td>
-                </tr>
-                <tr v-if="restList.length == 0">
-                <td>결과 없음</td>
-                </tr>
-                </table>
-                    <p>restId : {{restList[0].restName}}</p>
+            <div>
+                <div id="contentWrap">
+                    <!-- <button type="button" id="btnLoad">불러오기</button>  -->
+
+                    <input placeholder="Search" type="search" class="input" v-model="searchRest">
+                    <button type="button" id="btnSearch" @click="search">검색</button><br>
+                    <button type="button" id="btnTest" @click="test">테스트</button><br>
+                    <div class="memberList">
+                        <table style="width:50%;float:left;text-align: center;">
+                            <tr v-if="memberList.length > 0" v-for="(member, index) in memberList">
+                                <td v-if="member.memberId %2 == 0">
+                                    <label>
+                                        <input type="checkbox" name="memberName" :value="member.memberId"
+                                            v-model="checkedMembers">{{member.memberKrName}}, {{member.memberId}}
+                                    </label>
+                                </td>
+                            </tr>
+                        </table>
+                        <table style="width:50%;float:right;text-align: center;">
+                            <tr v-if="memberList.length > 0" v-for="(member, index) in memberList">
+                                <td v-if="member.memberId % 2 == 1">
+                                    <label>
+                                        <input type="checkbox" name="memberName" :value="member.memberId"
+                                            v-model="checkedMembers">{{member.memberKrName}}, {{member.memberId}}
+                                    </label>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="btn"><br><button type="button" @click="memberClear">선택 해제</button>
+                            <button type="button" value="all" @click="checkAllMembers">전체 선택</button>
+                            <button type="button" @click="recommend">추천하기</button>
+                    </div>
+
                 </div>
             </div>
         </div>
+
         <div class="grid-2">
-            <div id="map" style="width:100%;height:80vh;"></div>
+            <div id="lunchWrap">
+                <div>
+                    <input type="radio" name="radio" id="radioRP" value="point" v-model="picked" @change="changeRadio">
+                    <label for="radioRP">선호도</label>
+                    <input type="radio" name="radio"id="radioRD" value="distance" v-model="picked" @change="changeRadio">
+                    <label for="radioRD">거리순</label>
+                </div>
+                <div class="scrolltable">
+                    <table v-if="restList.length>0" v-for="(rest,index) in restList" class="restTable"
+                        :value="rest.restName" :lon="rest.restLon" :lat="rest.restLat" @click="marker1">
+                        <tr>
+                            <td>
+                                {{rest.restName}}
+                            </td>
+                            <td>
+                                {{rest.restCategory}}
+                            </td>
+                        </tr>
+                        <td colspan="2">
+                            {{rest.restAddr}}
+                        </td>
+                        </tr>
+                    </table>
+                    <table v-if="restList.length == 0">
+                        <tr>
+                            <td>결과 없음</td>
+                        </tr>
+                    </table>
+                </div>
+                <div>
+                    <button type="button" id="btnTest">테스트</button>
+                </div>
+                <span>
+                    <p>{{restList.length}}개 검색</p>
+                </span>
+            </div>
+        </div>
+
+        <div class="grid-3">
+            <div id="mapCtrlWrap">
+                <div class="btn-group">
+                    <table>
+                        <tr v-if="categoryButton.length>0" v-for="(category, index) in categoryButton">
+                            <td>
+                                <label>
+                                    <button type="button" name="category" :value="category.restCategory"
+                                        @click="categoryRest">
+                                        {{category.restCategory}}
+                                </label>
+                            </td>
+                        </tr>
+                    </table>
+                    </div>
+                    <div class="layerBtn">
+                        <button type="button" id="btn">1</button>
+                        <button type="button" id="btn">2</button>
+
+                
+                </div>
+
+            </div>
+            <div id="map"></div>
         </div>
     </div>
 
-    <script>
-	    var vectorLayer = new ol.layer.Vector({
-	        source: new ol.source.Vector()
-	    });
-
-        var map = new ol.Map({
-            target: 'map',
-            layers: [
-                new ol.layer.Tile({
-                    source: new ol.source.OSM()
-                }),
-                vectorLayer
-            ],
-            view: new ol.View({
-                zoom: 15,
-                center: ol.proj.fromLonLat([127.391055, 36.428902])
-            })
-        });
-
-
-//   var markerLayer;
-//   //마커 소스
-//   var markerSource = new ol.source.Vector();
-
-//   // addMarker();
-
-//   //마커 함수
-//   function addMarker() {
-//     //좌표
-//     var point_feature = new ol.Feature({
-//       geometry: new ol.geom.Point([lunchList[randN].longitude,
-//       lunchList[randN].latitude]).transform('EPSG:4326', 'EPSG:3857')
-//     });
-//     markerSource.addFeature(point_feature);
-//   }
-
-//   // markerSource.addFeature(point_feature);
-
-//   var markerStyle = new ol.style.Style({
-//     image: new ol.style.Icon({
-//       opacity: 1,//투명도 1 = 100%
-//       scale: 0.1,//크기 1 = 100%
-
-//       //marker 이미지, 해당 point를 marker로 변경한다.
-//       src: './marker04.png'
-//     }),
-//     //html의 css, z-index 기능이다.
-//     zindex: 10
-//   });
-
-//   //마커 레이어 생성
-//   markerLayer = new ol.layer.Vector({
-//     source: markerSource, //마커 feature 들
-//     style: markerStyle // 마커 스타일
-//   });
-
-//   // 지도에 마커가 그려진 레이어 추가
-//   map.addLayer(markerLayer);
-
-
-    </script>
 </body>
 
 </html>

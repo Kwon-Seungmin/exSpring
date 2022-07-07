@@ -4,6 +4,7 @@
 	<select id="selectMmbrList" resultType="com.Board.dto.MmbrDTO">
 		select *
 		from member
+		order by member_id asc
 	</select>
 
 </mapper>

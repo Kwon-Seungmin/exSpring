@@ -2,7 +2,7 @@ package com.Board.control;
 
 import com.Board.dto.LunchDTO;
 import com.Board.dto.RestDTO;
-import com.Board.service.SecondService;
+import com.Board.service.LunchService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RestController {
 
-	final SecondService secondService;
+	final LunchService secondService;
 
 	@GetMapping("/list.do")
 	public ResponseEntity<List<RestDTO>> list(ModelAndView mav) {

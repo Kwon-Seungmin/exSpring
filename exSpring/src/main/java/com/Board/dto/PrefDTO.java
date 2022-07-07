@@ -5,11 +5,10 @@ import org.apache.ibatis.type.Alias;
 import lombok.Getter;
 import lombok.Setter;
 
-@Alias("MmbrDTO")
+@Alias("prefDTO")
 @Getter
 @Setter
-public class MmbrDTO {
-	String memberId;
-	String memberEnName;
-	String memberKrName;
+public class PrefDTO {
+	String hateRestId;
+	String likeRestId;
 }

@@ -1,16 +1,207 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.Board.mapper.RestMapper">
+
 	<select id="selectRestList" resultType="com.Board.dto.RestDTO">
 		SELECT *
 		FROM rest
 	</select>
 
-	<select id="selectRest" resultType="com.Board.dto.RestDTO">
+	<select id="selectLunch" parameterType="String"
+		resultType="com.Board.dto.RestDTO">
 		SELECT *
 		FROM rest
-		WHERE rest_id = '13752';
+		WHERE rest_Id NOT IN (
+		SELECT hate_Rest_Id
+		FROM member_Hate
+		WHERE member_Id in
+		<foreach item="member" index="index" collection="array"
+			open="(" separator="," close=")">
+			#{member}
+		</foreach>
+		)
 	</select>
+
+	<select id="searchRest" parameterType="String"
+	resultType="com.Board.dto.RestDTO">
+	SELECT *
+	FROM rest
+	WHERE rest_name LIKE CONCAT('%', #{value}, '%')
+	</select>
+
+	<select id="recommendPoint" parameterType="String"
+		resultType="com.Board.dto.RestDTO">
+	select p.point, d.dist, r.*
+	from rest r
+	join (
+        select rest_id, sum(hate_point + like_point) point
+        from (
+            select CASE WHEN mh.rest_id is null THEN 0 ELSE -3 END hate_point
+            , CASE WHEN ml.rest_id is null THEN 0 ELSE 2 END like_point
+            , r.rest_id
+            from rest r
+                left join member_hate mh on (r.rest_id = mh.rest_id)
+                left join member_like ml on (r.rest_id = ml.rest_id)
+        	where
+				mh.member_id in
+				<foreach item="member" index="index" collection="array"
+				open="(" separator="," close=")">
+				#{member}
+				</foreach>
+			or ml.member_id in
+				<foreach item="member" index="index" collection="array"
+				open="(" separator="," close=")">
+				#{member}
+				</foreach>
+			or r.rest_id is not null
+        	) r
+        	group by rest_id
+    	) p on (r.rest_id = p.rest_id)
+    	join (
+        	SELECT ST_Distance(
+                ('SRID=4326;POINT(127.391033 36.428904)')::geometry,
+                ('SRID=4326;POINT(' || r.rest_lon || ' ' || r.rest_lat || ')')::geometry) dist
+            , r.rest_id
+        from rest r
+    	) d on (r.rest_id = d.rest_id)
+		order by p.point desc, d.dist asc
+		limit 10
+		</select>
+
+		<select id="recommendDistance" parameterType="String"
+		resultType="com.Board.dto.RestDTO">
+	select p.point, d.dist, r.*
+	from rest r
+	join (
+        select rest_id, sum(hate_point + like_point) point
+        from (
+            select CASE WHEN mh.rest_id is null THEN 0 ELSE -3 END hate_point
+            , CASE WHEN ml.rest_id is null THEN 0 ELSE 2 END like_point
+            , r.rest_id
+            from rest r
+                left join member_hate mh on (r.rest_id = mh.rest_id)
+                left join member_like ml on (r.rest_id = ml.rest_id)
+        	where
+				mh.member_id in
+				<foreach item="member" index="index" collection="array"
+				open="(" separator="," close=")">
+				#{member}
+				</foreach>
+			or ml.member_id in
+				<foreach item="member" index="index" collection="array"
+				open="(" separator="," close=")">
+				#{member}
+				</foreach>
+			or r.rest_id is not null
+        	) r
+        	group by rest_id
+    	) p on (r.rest_id = p.rest_id)
+    	join (
+        	SELECT ST_Distance(
+                ('SRID=4326;POINT(127.391033 36.428904)')::geometry,
+                ('SRID=4326;POINT(' || r.rest_lon || ' ' || r.rest_lat || ')')::geometry) dist
+            , r.rest_id
+        from rest r
+    	) d on (r.rest_id = d.rest_id)
+		order by d.dist asc, p.point desc
+		limit 10
+		</select>
+	<select id="recommendPoint2" parameterType="Map"
+		resultType="com.Board.dto.RestDTO">
+	select p.point, d.dist, r.*
+	from rest r
+	join (
+        select rest_id, sum(hate_point + like_point) point
+        from (
+            select CASE WHEN mh.rest_id is null THEN 0 ELSE -3 END hate_point
+            , CASE WHEN ml.rest_id is null THEN 0 ELSE 2 END like_point
+            , r.rest_id
+            from rest r
+                left join member_hate mh on (r.rest_id = mh.rest_id)
+                left join member_like ml on (r.rest_id = ml.rest_id)
+        	where
+				mh.member_id in
+				<foreach item="member" index="index" collection="checkedMembers"
+				open="(" separator="," close=")">
+				#{member}
+				</foreach>
+			or ml.member_id in
+				<foreach item="member" index="index" collection="checkedMembers"
+				open="(" separator="," close=")">
+				#{member}
+				</foreach>
+			or r.rest_id is not null
+        	) r
+        	group by rest_id
+    	) p on (r.rest_id = p.rest_id)
+    	join (
+        	SELECT ST_Distance(
+                ('SRID=4326;POINT(127.391033 36.428904)')::geometry,
+                ('SRID=4326;POINT(' || r.rest_lon || ' ' || r.rest_lat || ')')::geometry) dist
+            , r.rest_id
+        from rest r
+    	) d on (r.rest_id = d.rest_id)
+    	WHERE r.rest_category LIKE CONCAT('%', #{restCategory}, '%')
+		order by p.point desc, d.dist asc
+		limit 10
+		</select>
+
+		<select id="recommendDistance2" parameterType="Map"
+		resultType="com.Board.dto.RestDTO">
+	select p.point, d.dist, r.*
+	from rest r
+	join (
+        select rest_id, sum(hate_point + like_point) point
+        from (
+            select CASE WHEN mh.rest_id is null THEN 0 ELSE -3 END hate_point
+            , CASE WHEN ml.rest_id is null THEN 0 ELSE 2 END like_point
+            , r.rest_id
+            from rest r
+                left join member_hate mh on (r.rest_id = mh.rest_id)
+                left join member_like ml on (r.rest_id = ml.rest_id)
+        	where
+				mh.member_id in
+				<foreach item="member" index="index" collection="checkedMembers"
+				open="(" separator="," close=")">
+				#{member}
+				</foreach>
+			or ml.member_id in
+				<foreach item="member" index="index" collection="checkedMembers"
+				open="(" separator="," close=")">
+				#{member}
+				</foreach>
+			or r.rest_id is not null
+        	) r
+        	group by rest_id
+    	) p on (r.rest_id = p.rest_id)
+    	join (
+        	SELECT ST_Distance(
+                ('SRID=4326;POINT(127.391033 36.428904)')::geometry,
+                ('SRID=4326;POINT(' || r.rest_lon || ' ' || r.rest_lat || ')')::geometry) dist
+            , r.rest_id
+        from rest r
+    	) d on (r.rest_id = d.rest_id)
+    	WHERE r.rest_category LIKE CONCAT('%', #{restCategory}, '%')
+		order by d.dist asc, p.point desc
+		limit 10
+		</select>
+
+		<select id="selectCategory" parameterType="String"
+		resultType="com.Board.dto.RestDTO">
+			SELECT *
+			FROM rest
+			WHERE rest_category LIKE CONCAT('%', #{value}, '%')
+		</select>
+
+
+		<select id="categoryList" resultType="com.Board.dto.RestDTO">
+			SELECT DISTINCT rest_category
+			FROM rest
+			ORDER BY rest_category ASC
+		</select>
+
+
+
 </mapper>
 
 

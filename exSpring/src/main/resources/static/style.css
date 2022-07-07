@@ -1,0 +1,119 @@
+@charset "EUC-KR";
+
+    *{
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+
+.grid-container {
+    display: grid;
+    margin-left: 0.5em;
+    grid-template-columns: 2fr 5fr;
+    grid-template-rows: 1fr 1fr;
+    height: 100vh;
+
+}
+
+.grid-1 {
+    grid-column-start: 1;
+    grid-column-end: 2;
+}
+
+.grid-2 {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 2;
+    grid-row-end: 3;
+}
+
+.grid-3 {
+    margin-left: 10px;
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 3;
+}
+
+.scrolltable {
+    display: block;
+    width: 1fr;
+    height: 275px;
+    border-collapse: collapse;
+    overflow: auto;
+    background: rgb(255, 255, 255);
+    border-radius: 0.4em;
+    box-shadow: 0.3em 0.3em 0.7em #00000015;
+    transition: border 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: rgb(255, 255, 255) 0.2em solid;
+}
+
+.scrolltable:hover {
+    box-shadow: 1em 1em 1em #00000015;
+}
+.scrolltable table {
+    width: 1fr;
+    border: 3px solid lightgray;
+}
+.scrolltable table:hover {
+    border: #006fff 0.2em solid;
+}
+
+.scrolltable tr {
+    width: 1fr;
+    border: 2px solid black;
+}
+
+.scrolltable td {
+    border-top: 0;
+}
+
+#map{
+    width: 100%;
+    height:100vh;
+}
+.btn-group {
+    position:absolute;
+    bottom : 20px;
+    margin-left: 10px;
+    z-index: 999;
+}
+
+.btn-group button {
+    background-color: green; /* Green */
+    border: 1px solid blue;
+    color: white;
+    padding: 5px 5px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100px;
+    display: block;
+    border-radius: 0.4em;
+    box-shadow: 0.3em 0.3em 0.7em #00000015;
+  }
+  
+
+  .btn-group button:not(:last-child) {
+    border-bottom: none; /* Prevent double borders */
+  }
+  
+  .btn-group button:hover {
+    background-color: #3e8e41;
+  }
+
+  .layerBtn {
+    position: absolute;
+    bottom:20px;
+    right: 10px;
+    z-index:999;
+}
+
+  .layerBtn button {
+    background-color: blue;
+  }
