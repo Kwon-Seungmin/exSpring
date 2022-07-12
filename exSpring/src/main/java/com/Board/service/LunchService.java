@@ -11,8 +11,6 @@ public interface LunchService {
 
 	public List<MmbrDTO> memberList();
 
-	public List<RestDTO> selectLunch(String[] checkedMembers);
-
 	public List<RestDTO> searchRest(String searchRest);
 
 	public List<RestDTO> recommendPoint(String[] checkedMembers);

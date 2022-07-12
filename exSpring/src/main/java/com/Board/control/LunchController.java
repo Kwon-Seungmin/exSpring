@@ -15,21 +15,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.Board.dto.MmbrDTO;
 import com.Board.dto.RestDTO;
+import com.Board.dto.RestMenuDTO;
 import com.Board.service.LunchService;
+import com.Board.service.MenuService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class LunchController {
 
-
 	final LunchService lunchService;
+	final MenuService menuService;
 
-	@RequestMapping("/map")
-	public String vue() {
-		return "lMap";
-	}
 
 	//전체 불러오기
 	@GetMapping("/rest")
@@ -41,14 +41,14 @@ public class LunchController {
 		return ResponseEntity.ok(list);
 	}
 
-	//연습1
-	@GetMapping("/rest/hate")
-	public ResponseEntity<?> selectLunch(@RequestParam String[] checkedMembers) {
+	//멤버불러오기
+	 @GetMapping("/member")
+	 public ResponseEntity<?> memberList(MmbrDTO member) {
+		 List<MmbrDTO> List1 = new ArrayList<>(lunchService.memberList());
 
-		List<RestDTO> list = new ArrayList<>(lunchService.selectLunch(checkedMembers));
+		 return ResponseEntity.ok(List1);
+	 }
 
-		return ResponseEntity.ok(list);
-	}
 
 	//추천_선호도
 	@GetMapping("/recommend/point")
@@ -68,6 +68,7 @@ public class LunchController {
 		return ResponseEntity.ok(list);
 	}
 
+	//선호도_카테고리
 	@GetMapping("/recommend/point2")
 	public ResponseEntity<?> recommendPoint2(@RequestParam String[] checkedMembers, @RequestParam String restCategory) {
 		Map<String, Object> param = new HashMap<>();
@@ -80,7 +81,7 @@ public class LunchController {
 		return ResponseEntity.ok(list);
 	}
 
-	//추천_거리순
+	//거리순_카테고리
 	@GetMapping("/recommend/distance2")
 	public ResponseEntity<?> recommendDistance2(@RequestParam String[] checkedMembers, @RequestParam String restCategory) {
 		Map<String, Object> param = new HashMap<>();
@@ -88,27 +89,16 @@ public class LunchController {
 		param.put("restCategory", restCategory);
 
 		List<RestDTO> list = new ArrayList<>(lunchService.recommendDistance2(param));
-
 		return ResponseEntity.ok(list);
 	}
 
-
-	//검색
+	//이름_검색
 	@GetMapping("search")
 	public ResponseEntity<?> searchRest(@RequestParam String searchRest) {
-
 		List<RestDTO> list = new ArrayList<>(lunchService.searchRest(searchRest));
 
 		return ResponseEntity.ok(list);
 	}
-
-	//멤버불러오기
-	 @GetMapping("/member")
-	 public ResponseEntity<?> memberList(MmbrDTO member) {
-		 List<MmbrDTO> List1 = new ArrayList<>(lunchService.memberList());
-
-		 return ResponseEntity.ok(List1);
-	 }
 
 	 //카테고리 가져오기
 	 @GetMapping("/category")
@@ -122,12 +112,18 @@ public class LunchController {
 	 //카테고리별 호출
 	 @GetMapping("/category/filter")
 	 public ResponseEntity<?> selectCategory(@RequestParam String restCategory) {
-
 		 List<RestDTO> list = new ArrayList<>(lunchService.selectCategory(restCategory));
 
 		 return ResponseEntity.ok(list);
 	 }
 
+	 //메뉴리스트 호출
+	 @GetMapping("/restmenu")
+	 public ResponseEntity<?> selectRestMenu(@RequestParam String restId) {
+		 List<RestMenuDTO> list = new ArrayList<>(menuService.selectRestMenu(restId));
+
+		 return ResponseEntity.ok(list);
+	 }
 
 
 }

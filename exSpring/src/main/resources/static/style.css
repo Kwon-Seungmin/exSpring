@@ -1,50 +1,79 @@
 @charset "EUC-KR";
 
-    *{
-    box-sizing: border-box;
-}
-
+html,
 body {
-    margin: 0;
-    padding: 0;
+    margin: 0px;
+    padding: 0px;
+    width:  98vw;
+    height: 99vh;
 }
 
-
-.grid-container {
-    display: grid;
+.grid {
+    display: block;
     margin-left: 0.5em;
-    grid-template-columns: 2fr 5fr;
-    grid-template-rows: 1fr 1fr;
-    height: 100vh;
-
+    width: 100%;
+    height: 100%;
 }
+
+#map {
+    position: relative;
+    left: 24vw;
+    width: 76%;
+    height: 99vh;
+    z-index: 1;
+}
+
+.popTable {
+    min-width: 400px;
+    height: 100%;
+    position: absolute;
+    background-color: white;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #cccccc;
+    bottom: 12px;
+    left: -200px;
+}
+.popTable::after .popTable::before{
+    top: 100%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+}
+.popTable:after {
+    border-top-color: white;
+    border-width: 10px;
+    left: 48px;
+    margin-left: -10px;
+  }
+  .popTable:before {
+    border-top-color: #cccccc;
+    border-width: 11px;
+    left: 48px;
+    margin-left: -11px;
+  }
+  .popTableCloser {
+    text-decoration: none;
+    position: absolute;
+    top: 2px;
+    right: 8px;
+  }
+  .popTableCloser:after {
+    content: 'X ';
+  }
 
 .grid-1 {
-    grid-column-start: 1;
-    grid-column-end: 2;
-}
-
-.grid-2 {
-    grid-column-start: 1;
-    grid-column-end: 2;
-    grid-row-start: 2;
-    grid-row-end: 3;
-}
-
-.grid-3 {
-    margin-left: 10px;
-    grid-column-start: 2;
-    grid-column-end: 3;
-    grid-row-start: 1;
-    grid-row-end: 3;
-}
-
-.scrolltable {
+    position: absolute;
+    z-index: 999;
+    background-color: white;
     display: block;
-    width: 1fr;
-    height: 275px;
+    width: 450px;
+    height: 98vh;
     border-collapse: collapse;
-    overflow: auto;
     background: rgb(255, 255, 255);
     border-radius: 0.4em;
     box-shadow: 0.3em 0.3em 0.7em #00000015;
@@ -52,41 +81,191 @@ body {
     border: rgb(255, 255, 255) 0.2em solid;
 }
 
+.grid-1-a {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 35%;
+}
+
+.grid-1-a button {
+    width: 20%;
+    height: 50px;
+    font-size: 18px;
+    line-height: 28px;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    outline: none;
+    background-color: #f3f3f4;
+    color: #090909;
+    transition: .3s ease;
+}
+
+.grid-1-a button:hover {
+    outline: none;
+    border-color: #006fff;
+    background-color: #fff;
+    box-shadow: 0 0 0 4px rgb(0, 128, 255 / 10%);
+}
+
+.grid-1-a button:active {
+    box-shadow: 4px 4px 12px #c5c5c5,
+        -4px -4px 12px #ffffff;
+}
+
+.memberList {
+    position: relative;
+    top: 10px;
+    width: 450px;
+    z-index: 1;
+}
+
+.evenTable {
+    width: 50%;
+    float: left;
+    text-align: center;
+}
+
+.oddTable {
+    width: 50%;
+    float: right;
+    text-align: center;
+}
+
+.memberControl {
+    position: relative;
+    top:10px;
+    margin-left: 10px;
+    z-index: 0;
+}
+
+.memberControl button {
+    width: 100px;
+    margin: 10px;
+    box-shadow: 6px 6px 12px #c5c5c5,
+        -6px -6px 12px #ffffff;
+
+}
+
+.grid-1-b {
+    position: relative;
+    width: 95%;
+    align-content: center;
+    margin: 10px;
+    top: 0;
+    left: 0;
+    height: 65%;
+}
+
+.grid-2 {
+    width: 100%;
+    height: 100%;
+    position: relative;
+
+}
+
+.searchdiv {
+    display: block;
+    position: relative;
+    top: 0px;
+    left: 0px;
+    margin: auto;
+    line-height: 28px;
+    width: 340px;
+    height: 55px;
+    padding: 5px 10px;
+    border-collapse: collapse;
+    background: rgb(255, 255, 255);
+    border-radius: 0.4em;
+    box-shadow: 0.3em 0.3em 0.7em #00000015;
+    transition: border 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: #006fff 0.1em solid;
+}
+
+.searchdiv .input {
+    width: 75%;
+    height: 50px;
+    line-height: 28px;
+    padding: 1em 1em;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    outline: none;
+    background-color: #f3f3f4;
+    color: #0d0c22;
+    transition: .3s ease;
+    font-size: 18px;
+    margin-right: 12px;
+}
+
+.input::placeholder {
+    color: #9e9ea7;
+}
+
+.input:focus,
+.input:hover {
+    outline: none;
+    border-color: #006fff;
+    background-color: #fff;
+    box-shadow: 0 0 0 4px rgb(0, 128, 255 / 10%);
+}
+
+.searchdiv button {
+    float: right;
+}
+
+
+.scrolltable {
+    display: block;
+    width: 400px;
+    height: 50vh;
+    border-collapse: collapse;
+    overflow: auto;
+    background: rgb(255, 255, 255);
+    border-radius: 10px;
+    box-shadow: 0.3em 0.3em 0.7em #00000015;
+    transition: border 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: rgb(255, 255, 255) 0.2em solid;
+}
+
+.scrolltable::-webkit-scrollbar {
+    width: 10px;
+}
+
+.scrolltable::-webkit-scrollbar-thumb {
+    background-color: #006fff;
+    border-radius: 10px;
+}
+
+
 .scrolltable:hover {
     box-shadow: 1em 1em 1em #00000015;
 }
+
 .scrolltable table {
-    width: 1fr;
+    border-radius: 10px;
+    width: 380px;
     border: 3px solid lightgray;
 }
+
 .scrolltable table:hover {
     border: #006fff 0.2em solid;
 }
 
-.scrolltable tr {
-    width: 1fr;
-    border: 2px solid black;
-}
-
-.scrolltable td {
-    border-top: 0;
-}
-
-#map{
-    width: 100%;
-    height:100vh;
-}
 .btn-group {
-    position:absolute;
-    bottom : 20px;
-    margin-left: 10px;
+    position: absolute;
+    right: 3%;
+    top: 3%;
     z-index: 999;
 }
 
 .btn-group button {
-    background-color: green; /* Green */
-    border: 1px solid blue;
-    color: white;
+    position: relative;
+    top: 10px;
+    background-color: white;
+    /* Green */
+    border: 2px solid #006fff;
+    color: #006fff;
     padding: 5px 5px;
     text-align: center;
     text-decoration: none;
@@ -96,24 +275,90 @@ body {
     display: block;
     border-radius: 0.4em;
     box-shadow: 0.3em 0.3em 0.7em #00000015;
-  }
-  
-
-  .btn-group button:not(:last-child) {
-    border-bottom: none; /* Prevent double borders */
-  }
-  
-  .btn-group button:hover {
-    background-color: #3e8e41;
-  }
-
-  .layerBtn {
-    position: absolute;
-    bottom:20px;
-    right: 10px;
-    z-index:999;
 }
 
-  .layerBtn button {
-    background-color: blue;
-  }
+.btn-group button:not(:last-child) {
+    border-bottom: none;
+    /* Prevent double borders */
+}
+
+.grid-2 button:hover {
+    background-color: #006fff;
+    color: white;
+}
+
+.layerBtn {
+    position: absolute;
+    right: 3%;
+    bottom: 5%;
+    z-index: 999;
+}
+
+.layerBtn button {
+    background-color: white;
+    border: 2px solid #006fff;
+    border-radius: 10px;
+    color: #006fff;
+    text-align: center;
+    font-size: 18px;
+    cursor: pointer;
+    width: 50px;
+    height: 50px;
+    margin: 3px;
+}
+
+.gaiaBtn {
+    position: absolute;
+    right: 3%;
+    bottom: 40%;
+    z-index: 999;
+}
+.gaiaBtn button {
+    background-color: white;
+    border: 2px solid #006fff;
+    border-radius: 10px;
+    color: #006fff;
+    text-align: center;
+    font-size: 18px;
+    cursor: pointer;
+    width: 100%;
+    height: 50px;
+    margin: 3px;
+}
+
+.ol-popup-custom {
+    padding: 0;
+    margin: 0;
+    pointer-events: none;
+    position: absolute;
+    background-color: white;
+    filter: drop-shadow(3px 3px 7px rgba(0, 0, 0, 0.6));
+    border: 1px solid black;
+    width: 90px;
+    left: -45px;
+    /* 위치를 조정, -width의 절반값 */
+    height: 24px;
+    bottom: -12px;
+    /* 위치를 조정, -height의 절반값 */
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.popup-content {
+    position: relative;
+    animation-duration: 1s;
+    animation-name: slidein;
+    animation-direction: alternate;
+    animation-iteration-count: infinite;
+    box-sizing: border-box;
+    line-height: 100%;
+}
+
+.popup-content>span {
+    display: inline-block;
+    line-height: 100%;
+    width: 100%;
+    font-size: 10px;
+    font-weight: bold;
+    box-sizing: border-box;
+}

@@ -31,11 +31,6 @@ public class LunchServiceImpl implements LunchService{
 		return mmapper.selectMmbrList();
 	}
 
-	@Override
-	public List<RestDTO> selectLunch(String[] checkedMembers) {
-		return mapper.selectLunch(checkedMembers);
-	}
-
 	public List<RestDTO> searchRest(String searchRest) {
 		return mapper.searchRest(searchRest);
 	}

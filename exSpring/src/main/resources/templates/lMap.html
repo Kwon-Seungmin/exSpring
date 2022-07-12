@@ -9,93 +9,91 @@
     <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.14.1/build/ol.js"></script>
     <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.14.1/css/ol.css" type="text/css">
-    <script src="test.js"></script>
+    <script src="vue.js"></script>
     <link rel="stylesheet" href="style.css">
 
 </head>
 
 <body>
-    <div class="grid-container">
+    <div class="grid">
         <div class="grid-1">
-
-            <div>
+            <div class="grid-1-a">
                 <div id="contentWrap">
-                    <!-- <button type="button" id="btnLoad">불러오기</button>  -->
+                    <div class="searchdiv">
+                        <input placeholder="Search" type="search" class="input" v-model="searchRest">
+                        <button type="button" id="btnSearch" @click="search">검색</button><br>
+                    </div>
 
-                    <input placeholder="Search" type="search" class="input" v-model="searchRest">
-                    <button type="button" id="btnSearch" @click="search">검색</button><br>
-                    <button type="button" id="btnTest" @click="test">테스트</button><br>
                     <div class="memberList">
-                        <table style="width:50%;float:left;text-align: center;">
+                        <table class="evenTable">
                             <tr v-if="memberList.length > 0" v-for="(member, index) in memberList">
                                 <td v-if="member.memberId %2 == 0">
                                     <label>
                                         <input type="checkbox" name="memberName" :value="member.memberId"
-                                            v-model="checkedMembers">{{member.memberKrName}}, {{member.memberId}}
+                                            v-model="checkedMembers">{{member.memberKrName}}
                                     </label>
                                 </td>
                             </tr>
                         </table>
-                        <table style="width:50%;float:right;text-align: center;">
+                        <table class="oddTable">
                             <tr v-if="memberList.length > 0" v-for="(member, index) in memberList">
                                 <td v-if="member.memberId % 2 == 1">
                                     <label>
                                         <input type="checkbox" name="memberName" :value="member.memberId"
-                                            v-model="checkedMembers">{{member.memberKrName}}, {{member.memberId}}
+                                            v-model="checkedMembers">{{member.memberKrName}}
                                     </label>
                                 </td>
                             </tr>
                         </table>
+
+
                     </div>
-                    <div class="btn"><br><button type="button" @click="memberClear">선택 해제</button>
-                            <button type="button" value="all" @click="checkAllMembers">전체 선택</button>
-                            <button type="button" @click="recommend">추천하기</button>
+                    <div class="memberControl">
+                        <button type="button" @click="memberClear">선택 해제</button>
+                        <button type="button" value="all" @click="checkAllMembers">전체 선택</button>
+                        <button type="button" @click="recommend">추천하기</button>
                     </div>
 
                 </div>
             </div>
-        </div>
 
+            <div class="grid-1-b">
+                <div id="lunchWrap">
+                    <div>
+                        <p>{{restList.length}}개 검색</p>
+                        <input type="radio" name="radio" id="radioRP" value="point" v-model="picked"
+                            @change="changeRadio">
+                        <label for="radioRP">선호도</label>
+                        <input type="radio" name="radio" id="radioRD" value="distance" v-model="picked"
+                            @change="changeRadio">
+                        <label for="radioRD">거리순</label>
+                    </div>
+                    <div class="scrolltable">
+                        <table v-if="restList.length>0" v-for="(rest,index) in restList" class="restTable"
+                            :value="rest.restId" :lon="rest.restLon" :lat="rest.restLat" @click="restClick">
+                            <tr>
+                                <td>
+                                    {{rest.restName}}
+                                </td>
+                                <td style="float: right;">
+                                    {{rest.restCategory}}
+                                </td>
+                            </tr>
+                            <td colspan="2">
+                                {{rest.restAddr}}
+                            </td>
+                            </tr>
+                        </table>
+                        <table v-if="restList.length == 0">
+                            <tr>
+                                <td>결과 없음</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="grid-2">
-            <div id="lunchWrap">
-                <div>
-                    <input type="radio" name="radio" id="radioRP" value="point" v-model="picked" @change="changeRadio">
-                    <label for="radioRP">선호도</label>
-                    <input type="radio" name="radio"id="radioRD" value="distance" v-model="picked" @change="changeRadio">
-                    <label for="radioRD">거리순</label>
-                </div>
-                <div class="scrolltable">
-                    <table v-if="restList.length>0" v-for="(rest,index) in restList" class="restTable"
-                        :value="rest.restName" :lon="rest.restLon" :lat="rest.restLat" @click="marker1">
-                        <tr>
-                            <td>
-                                {{rest.restName}}
-                            </td>
-                            <td>
-                                {{rest.restCategory}}
-                            </td>
-                        </tr>
-                        <td colspan="2">
-                            {{rest.restAddr}}
-                        </td>
-                        </tr>
-                    </table>
-                    <table v-if="restList.length == 0">
-                        <tr>
-                            <td>결과 없음</td>
-                        </tr>
-                    </table>
-                </div>
-                <div>
-                    <button type="button" id="btnTest">테스트</button>
-                </div>
-                <span>
-                    <p>{{restList.length}}개 검색</p>
-                </span>
-            </div>
-        </div>
-
-        <div class="grid-3">
             <div id="mapCtrlWrap">
                 <div class="btn-group">
                     <table>
@@ -109,19 +107,19 @@
                             </td>
                         </tr>
                     </table>
-                    </div>
-                    <div class="layerBtn">
-                        <button type="button" id="btn">1</button>
-                        <button type="button" id="btn">2</button>
-
-                
                 </div>
-
+                <div class="layerBtn">
+                    <button type="button" id="btnGeoOn" @click="wmsOn">On</button>
+                    <button type="button" id="btnGeoOff" @click="wmsOff">Off</button>
+                </div>
+                <div class="gaiaBtn">
+                    <button type="button" id="btnGaia" @click="gaiaOn">Gaia3D</button>
+                </div>
             </div>
-            <div id="map"></div>
+            <div class="map" id="map"></div>
         </div>
-    </div>
 
+    </div>
 </body>
 
 </html>

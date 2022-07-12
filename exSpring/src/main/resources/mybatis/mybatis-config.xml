@@ -5,13 +5,10 @@
 
 <configuration>
 
-
-   <!--  <typeAliases>
-        <package name="com.Board.dto.Mmbrdto"/>
-    </typeAliases> -->
-
- <typeAliases>
+ 	<typeAliases>
+ 		<package name="com.Board.dto.Mmbrdto"/>
     	<package name="com.Board.dto.RestDTO"/>
+    	<package name="com.Board.dto.RestMenuDTO"/>
     </typeAliases>
 
 

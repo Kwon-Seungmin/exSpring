@@ -5,10 +5,13 @@ import org.apache.ibatis.type.Alias;
 import lombok.Getter;
 import lombok.Setter;
 
-@Alias("prefDTO")
+@Alias("RestMenuDTO")
 @Getter
 @Setter
-public class PrefDTO {
-	String hateRestId;
-	String likeRestId;
+public class RestMenuDTO {
+	String restId;
+	String menuId;
+	String menu;
+	String price;
+
 }
