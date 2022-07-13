@@ -41,14 +41,6 @@ public class LunchController {
 		return ResponseEntity.ok(list);
 	}
 
-	//연습1
-	@GetMapping("/rest/hate")
-	public ResponseEntity<?> selectLunch(@RequestParam String[] checkedMembers) {
-
-		List<RestDTO> list = new ArrayList<>(lunchService.selectLunch(checkedMembers));
-
-		return ResponseEntity.ok(list);
-	}
 
 	//추천_선호도
 	@GetMapping("/recommend/point")
