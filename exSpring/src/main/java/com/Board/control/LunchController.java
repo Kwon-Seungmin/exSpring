@@ -34,10 +34,8 @@ public class LunchController {
 	//전체 불러오기
 	@GetMapping("/rest")
 	public ResponseEntity<?> restList(HttpServletRequest request) {
-		System.out.println(request.getAttribute("memberName"));
 
 		List<RestDTO> list = new ArrayList<>(lunchService.restList());;
-
 		return ResponseEntity.ok(list);
 	}
 
@@ -55,7 +53,6 @@ public class LunchController {
 	public ResponseEntity<?> recommendPoint(@RequestParam String[] checkedMembers) {
 
 		List<RestDTO> list = new ArrayList<>(lunchService.recommendPoint(checkedMembers));
-
 		return ResponseEntity.ok(list);
 	}
 
@@ -64,7 +61,6 @@ public class LunchController {
 	public ResponseEntity<?> recommendDistance(@RequestParam String[] checkedMembers) {
 
 		List<RestDTO> list = new ArrayList<>(lunchService.recommendDistance(checkedMembers));
-
 		return ResponseEntity.ok(list);
 	}
 
@@ -105,7 +101,6 @@ public class LunchController {
 	 public ResponseEntity<?> restCategory(RestDTO restCategory) {
 
 		 List<RestDTO> list = new ArrayList<>(lunchService.categoryList());
-
 		 return ResponseEntity.ok(list);
 	 }
 
@@ -113,7 +108,6 @@ public class LunchController {
 	 @GetMapping("/category/filter")
 	 public ResponseEntity<?> selectCategory(@RequestParam String restCategory) {
 		 List<RestDTO> list = new ArrayList<>(lunchService.selectCategory(restCategory));
-
 		 return ResponseEntity.ok(list);
 	 }
 
@@ -121,7 +115,6 @@ public class LunchController {
 	 @GetMapping("/restmenu")
 	 public ResponseEntity<?> selectRestMenu(@RequestParam String restId) {
 		 List<RestMenuDTO> list = new ArrayList<>(menuService.selectRestMenu(restId));
-
 		 return ResponseEntity.ok(list);
 	 }
 
