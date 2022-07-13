@@ -39,6 +39,7 @@ public class LunchController {
 		return ResponseEntity.ok(list);
 	}
 
+<<<<<<< HEAD
 	//멤버불러오기
 	 @GetMapping("/member")
 	 public ResponseEntity<?> memberList(MmbrDTO member) {
@@ -47,6 +48,8 @@ public class LunchController {
 		 return ResponseEntity.ok(List1);
 	 }
 
+=======
+>>>>>>> lunchVue
 
 	//추천_선호도
 	@GetMapping("/recommend/point")
