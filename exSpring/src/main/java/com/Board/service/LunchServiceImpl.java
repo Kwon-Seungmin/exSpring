@@ -14,49 +14,47 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class LunchServiceImpl implements LunchService{
-
+public class LunchServiceImpl implements LunchService {
 
 	private final RestMapper mapper;
 
 	private final MemberMapper mmapper;
 
 	@Override
-	public List<RestDTO> restList() {
-		return mapper.selectRestList();
+	public List<RestDTO> getRestList() {
+		return mapper.getRestList();
 	}
 
 	@Override
-	public List<MmbrDTO> memberList() {
-		return mmapper.selectMmbrList();
+	public List<MmbrDTO> getMmbrList() {
+		return mmapper.getMmbrList();
 	}
 
 	public List<RestDTO> searchRest(String searchRest) {
 		return mapper.searchRest(searchRest);
 	}
 
-	public List<RestDTO> recommendPoint(String[] checkedMembers) {
-		return mapper.recommendPoint(checkedMembers);
+	public List<RestDTO> recommendByPoint_Member(String[] checkedMembers) {
+		return mapper.recommendByPoint_Member(checkedMembers);
 	}
 
-	public List<RestDTO> recommendDistance(String[] checkedMembers) {
-		return mapper.recommendDistance(checkedMembers);
+	public List<RestDTO> recommendByDistance_Member(String[] checkedMembers) {
+		return mapper.recommendByDistance_Member(checkedMembers);
 	}
 
-	public List<RestDTO> recommendPoint2(Map<String, Object> param) {
-		return mapper.recommendPoint2(param);
+	public List<RestDTO> recommendByPoint_Category(Map<String, Object> param) {
+		return mapper.recommendByPoint_Category(param);
 	}
 
-	public List<RestDTO> recommendDistance2(Map<String, Object> param) {
-		return mapper.recommendDistance2(param);
+	public List<RestDTO> recommendByDistance_Category(Map<String, Object> param) {
+		return mapper.recommendByDistance_Category(param);
 	}
 
-
-	public List<RestDTO> categoryList() {
-		return mapper.categoryList();
+	public List<RestDTO> getCategoryList() {
+		return mapper.getCategoryList();
 	}
 
-	public List<RestDTO> selectCategory(String restCategory) {
-		return mapper.selectCategory(restCategory);
+	public List<RestDTO> restByCategory(String restCategory) {
+		return mapper.restByCategory(restCategory);
 	}
 }

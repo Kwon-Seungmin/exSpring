@@ -9,6 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MmbrDTO {
+//	member 테이블
 	String memberId;
 	String memberEnName;
 	String memberKrName;

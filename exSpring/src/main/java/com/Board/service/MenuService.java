@@ -6,5 +6,6 @@ import com.Board.dto.MmbrDTO;
 import com.Board.dto.RestMenuDTO;
 
 public interface MenuService {
-	public List<RestMenuDTO> selectRestMenu(String restId);
+	//메뉴리스트 호출
+	public List<RestMenuDTO> getRestMenu(String restId);
 }

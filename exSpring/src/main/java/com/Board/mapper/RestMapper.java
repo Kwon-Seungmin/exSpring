@@ -9,19 +9,19 @@ import com.Board.dto.RestDTO;
 
 @Mapper
 public interface RestMapper {
-	List<RestDTO> selectRestList();
+	List<RestDTO> getRestList();
 
 	List<RestDTO> searchRest(String searchRest);
 
-	List<RestDTO> recommendPoint(String[] checkedMembers);
+	List<RestDTO> recommendByPoint_Member(String[] checkedMembers);
 
-	List<RestDTO> recommendDistance(String[] checkedMembers);
+	List<RestDTO> recommendByDistance_Member(String[] checkedMembers);
 
-	List<RestDTO> recommendPoint2(Map<String, Object> param);
+	List<RestDTO> recommendByPoint_Category(Map<String, Object> param);
 
-	List<RestDTO> recommendDistance2(Map<String, Object> param);
+	List<RestDTO> recommendByDistance_Category(Map<String, Object> param);
 
-	List<RestDTO> categoryList();
+	List<RestDTO> getCategoryList();
 
-	List<RestDTO> selectCategory(String restCategory);
+	List<RestDTO> restByCategory(String restCategory);
 }

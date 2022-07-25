@@ -8,7 +8,6 @@ import com.Board.dto.RestMenuDTO;
 
 @Mapper
 public interface RestMenuMapper {
-	List<RestMenuDTO> selectRestMenu(String restId);
-
+	List<RestMenuDTO> getRestMenu(String restId);
 
 }

@@ -8,6 +8,6 @@ import com.Board.dto.MmbrDTO;
 
 @Mapper
 public interface MemberMapper {
-	List<MmbrDTO> selectMmbrList();
-	
+	List<MmbrDTO> getMmbrList();
+
 }

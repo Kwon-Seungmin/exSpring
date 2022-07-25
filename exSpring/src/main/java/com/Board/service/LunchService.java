@@ -7,21 +7,22 @@ import com.Board.dto.MmbrDTO;
 import com.Board.dto.RestDTO;
 
 public interface LunchService {
-	public List<RestDTO> restList();
 
-	public List<MmbrDTO> memberList();
+	public List<RestDTO> getRestList();
+
+	public List<MmbrDTO> getMmbrList();
 
 	public List<RestDTO> searchRest(String searchRest);
 
-	public List<RestDTO> recommendPoint(String[] checkedMembers);
+	public List<RestDTO> recommendByPoint_Member(String[] checkedMembers);
 
-	public List<RestDTO> recommendDistance(String[] checkedMembers);
+	public List<RestDTO> recommendByDistance_Member(String[] checkedMembers);
 
-	public List<RestDTO> recommendPoint2(Map<String, Object> param);
+	public List<RestDTO> recommendByPoint_Category(Map<String, Object> param);
 
-	public List<RestDTO> recommendDistance2(Map<String, Object> param);
+	public List<RestDTO> recommendByDistance_Category(Map<String, Object> param);
 
-	public List<RestDTO> categoryList();
+	public List<RestDTO> getCategoryList();
 
-	public List<RestDTO> selectCategory(String restCategory);
+	public List<RestDTO> restByCategory(String restCategory);
 }

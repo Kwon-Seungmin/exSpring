@@ -9,6 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RestDTO {
+//	rest 테이블
 	String restId;
 	String restName;
 	String restAddr;

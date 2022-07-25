@@ -18,7 +18,8 @@ public class MenuServiceImpl implements MenuService{
 	private final RestMenuMapper mapper;
 
 	@Override
-	public List<RestMenuDTO> selectRestMenu(String restId) {
-		return mapper.selectRestMenu(restId);
+	public List<RestMenuDTO> getRestMenu(String restId) {
+		return mapper.getRestMenu(restId);
 	}
+
 }

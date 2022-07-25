@@ -2,10 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.Board.mapper.RestMenuMapper">
 
-<select id="selectRestMenu" parameterType="com.Board.dto.RestDTO"
+	<select id="getRestMenu" parameterType="com.Board.dto.RestDTO"
 		resultType="com.Board.dto.RestMenuDTO">
-			SELECT *
-			FROM rest_menu
-			WHERE rest_id in (#{value})
-		</select>
+		SELECT *
+		FROM rest_menu
+		WHERE rest_id in (#{value})
+	</select>
 </mapper>

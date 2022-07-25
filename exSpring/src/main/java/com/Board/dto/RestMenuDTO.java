@@ -9,6 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RestMenuDTO {
+//	rest_menu 테이블
 	String restId;
 	String menuId;
 	String menu;
