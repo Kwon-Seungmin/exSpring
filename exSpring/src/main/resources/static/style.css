@@ -24,7 +24,7 @@ body {
     z-index: 1;
 }
 
-.popTable {
+.popupTable {
     min-width: 400px;
     height: 100%;
     position: absolute;
@@ -36,7 +36,7 @@ body {
     bottom: 12px;
     left: -200px;
 }
-.popTable::after .popTable::before{
+.popupTable::after .popipTable::before{
     top: 100%;
         border: solid transparent;
         content: " ";
@@ -45,25 +45,25 @@ body {
         position: absolute;
         pointer-events: none;
 }
-.popTable:after {
+.popupTable:after {
     border-top-color: white;
     border-width: 10px;
     left: 48px;
     margin-left: -10px;
   }
-  .popTable:before {
+  .popupTable:before {
     border-top-color: #cccccc;
     border-width: 11px;
     left: 48px;
     margin-left: -11px;
   }
-  .popTableCloser {
+  .popupTableCloser {
     text-decoration: none;
     position: absolute;
     top: 2px;
     right: 8px;
   }
-  .popTableCloser:after {
+  .popupTableCloser:after {
     content: 'X ';
   }
 
@@ -75,7 +75,7 @@ body {
     width: 450px;
     height: 98vh;
     border-collapse: collapse;
-    background: rgb(0, 0, 0);
+    background: rgb(255, 255, 255);
     border-radius: 0.4em;
     box-shadow: 0.3em 0.3em 0.7em #00000015;
     transition: border 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
