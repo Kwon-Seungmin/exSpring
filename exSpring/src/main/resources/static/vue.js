@@ -2,6 +2,8 @@ console.log('start vue');
 let lunchVue;
 let contentVue;
 let mapVue;
+
+
 let lastSelectedCategory = '';
 var avLon = 0;
 var avLat = 0;
@@ -9,26 +11,27 @@ var avLat = 0;
 document.addEventListener('DOMContentLoaded', () => {
     //icon 추가 함수
     function addIcon(a, b, c) {
-        iconFeature1 = new ol.Feature({
-            geometry : new ol.geom.Point([a, b]).transform('EPSG:4326', 'EPSG:3857')
+        restIconFeature = new ol.Feature({
+            geometry: new ol.geom.Point([a, b]).transform('EPSG:4326', 'EPSG:3857')
         });
-        
+
         var iconStyle = new ol.style.Style({
             image: new ol.style.Icon({
                 opacity: 1,
                 scale: 0.18,
                 src: `./img/${c}.png`
-            })
+            }),
+            zindex: 10
         });
 
-        iconFeature1.setStyle(iconStyle);
-        vectorSource.addFeature(iconFeature1);
+        restIconFeature.setStyle(iconStyle);
+        vectorSource.addFeature(restIconFeature);
 
     };
 
 
-    var iconFeature = new ol.Feature({
-        geometry : new ol.geom.Point([127.391055, 36.428902]).transform('EPSG:4326', 'EPSG:3857')
+    var gaiaIconFeature = new ol.Feature({
+        geometry: new ol.geom.Point([127.391055, 36.428902]).transform('EPSG:4326', 'EPSG:3857')
     });
 
     var iconStyle = new ol.style.Style({
@@ -40,14 +43,14 @@ document.addEventListener('DOMContentLoaded', () => {
         zindex: 10
     });
 
-    iconFeature.setStyle(iconStyle);
+    gaiaIconFeature.setStyle(iconStyle);
 
     var vectorSource = new ol.source.Vector({
-        features: [iconFeature] 
+        features: [gaiaIconFeature]
     });
 
     var vectorLayer = new ol.layer.Vector({
-        source:  vectorSource,
+        source: vectorSource,
         zindex: 999
     });
 
@@ -55,6 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
         source: new ol.source.OSM()
     });
 
+    //geoserver에서 불러옴
     var wms = new ol.layer.Tile({
         source: new ol.source.TileWMS({
             url: 'http://localhost:8180/geoserver/seungminlunch/wms?service=WMS', //레이어 url
@@ -74,37 +78,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
     var map = new ol.Map({
         target: 'map',
-        layers: [rasterLayer, wms,vectorLayer ],
+        layers: [rasterLayer, wms, vectorLayer],
         view: new ol.View({
             zoom: 17,
             center: ol.proj.fromLonLat([127.391055, 36.428902])
         })
     });
 
-    let popTable = document.createElement('table');
-    popTable.classList.add('popTable');
+    let popupTable = document.createElement('table');
+    popupTable.classList.add('popupTable');
 
-    let popCloser = document.createElement('a');
-    popCloser.classList.add('popTableCloser');
-    popCloser.href = "#";
-    
-    document.body.appendChild(popTable);
+    let popupCloser = document.createElement('a');
+    popupCloser.classList.add('popupTableCloser');
+    popupCloser.href = "#";
+
+    document.body.appendChild(popupTable);
 
     var overlay = new ol.Overlay({
-        element: popTable,
+        element: popupTable
     });
 
-    function makePop(a, b, c) {
-        popTable.innerHTML = '';
+    function makePopup(a, b, c) {
+        popupTable.innerHTML = '';
 
-        
-
-    popTable.appendChild(popCloser);
+        popupTable.appendChild(popupCloser);
 
         var coordinate = new ol.geom.Point([a, b]).transform('EPSG:4326', 'EPSG:3857')
         c.forEach(menu => {
             let menuTr = document.createElement('tr');
-            popTable.appendChild(menuTr);
+            popupTable.appendChild(menuTr);
 
             let menuTd = document.createElement('td');
             menuTd.classList.add();
@@ -116,36 +118,38 @@ document.addEventListener('DOMContentLoaded', () => {
         overlay.setPosition(coordinate.flatCoordinates);
     };
 
-    popCloser.onclick = function () {
+    popupCloser.onclick = function () {
         overlay.setPosition(undefined);
-        popCloser.blur();
+        popupCloser.blur();
         return false;
     };
 
-    function zoomRest(x, y) {
-        map.getView().setZoom(18);
-        map.getView().setCenter(ol.proj.fromLonLat([x, y]));
-    }
+
+
+
+    //회사 중심
     function zoomGaia() {
         map.getView().setZoom(17);
         map.getView().setCenter(ol.proj.fromLonLat([127.391055, 36.428902]));
     }
-    function zoomCenter(a,b) {
+    //식당 중심
+    function zoomRest(x, y) {
+        map.getView().setZoom(18);
+        map.getView().setCenter(ol.proj.fromLonLat([x, y]));
+    }
+    //카테고리 중심
+    function zoomCenter(a, b) {
         map.getView().setZoom(17);
-        map.getView().setCenter(ol.proj.fromLonLat([a,b]));
+        map.getView().setCenter(ol.proj.fromLonLat([a, b]));
         avLon = 0;
         avLat = 0;
     }
 
-
+    // geoserver wms on/off
     function wmsLayerOn() {
-
-        
         wms.setVisible(true);
     }
     function wmsLayerOff() {
-
-        
         wms.setVisible(false);
     }
 
@@ -176,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
             async recommend() {
                 lastSelectedCategory = '';
 
-                const response1 = await axios({
+                const response = await axios({
                     method: 'get',
                     url: `/recommend/${lunchVue.picked}`,
                     params: {
@@ -184,15 +188,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 });
 
-                lunchVue.restList = response1.data;
+                lunchVue.restList = response.data;
 
                 vectorSource.clear();
                 lunchVue.restList.forEach(rest => {
-                    addIcon(rest.restLon,rest.restLat,rest.restCategory);
-                    avLon += rest.restLon *1;
-                    avLat += rest.restLat *1;
+                    addIcon(rest.restLon, rest.restLat, rest.restCategory);
+                    avLon += rest.restLon * 1;
+                    avLat += rest.restLat * 1;
                 });
-                zoomCenter(avLon/lunchVue.restList.length,avLat/lunchVue.restList.length);
+                zoomCenter(avLon / lunchVue.restList.length, avLat / lunchVue.restList.length);
 
                 vectorSource.addFeature(iconFeature);
 
@@ -201,8 +205,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             async search() {
 
-  
-                const response2 = await axios({
+
+                const response = await axios({
                     method: 'get',
                     url: '/search',
                     params: {
@@ -214,15 +218,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
-                lunchVue.restList = response2.data;
+                lunchVue.restList = response.data;
                 if (lunchVue.restList.length == 0) {
                     alert('검색 결과가 없습니다.');
                     return;
                 }
                 lunchVue.restList.forEach(rest => {
-                    addIcon(rest.restLon,rest.restLat,rest.restCategory);
+                    addIcon(rest.restLon, rest.restLat, rest.restCategory);
                 });
-                vectorSource.addFeature(iconFeature);
+                vectorSource.addFeature(gaiaIconFeature);
             },
             memberClear() {
                 this.checkedMembers = [];
@@ -251,13 +255,11 @@ document.addEventListener('DOMContentLoaded', () => {
         methods: {
             init() {
                 console.log('init lunch vue');
-                console.log('ffff')
             },
 
             restClear() {
                 this.restList = [];
             },
-            // 메소드명 변경
 
             async restClick(e) {
 
@@ -273,12 +275,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 menuList = response.data;
-                makePop(menuLon, menuLat, menuList);
+                makePopup(menuLon, menuLat, menuList);
                 zoomRest(menuLon, menuLat);
 
             },
-            changeRadio() {
 
+            changeRadio() {
+                //최근 목록 출처
                 if (lastSelectedCategory == '') {
                     contentVue.recommend();
                     return;
@@ -287,7 +290,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     mapVue.categoryRest();
                     return;
                 }
-
             }
         },
         created() {
@@ -335,10 +337,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         restCategory: this.restCategory
                     }
                 });
-                
 
                 lunchVue.restList = response.data;
-
 
                 vectorSource.clear();
                 lunchVue.restList.forEach(rest => {
@@ -346,7 +346,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     avLon += rest.restLon * 1;
                     avLat += rest.restLat * 1;
                 });
-                zoomCenter(avLon/lunchVue.restList.length,avLat/lunchVue.restList.length);
+
+                zoomCenter(avLon / lunchVue.restList.length, avLat / lunchVue.restList.length);
                 vectorSource.addFeature(iconFeature);
 
             },
@@ -374,4 +375,3 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 });
-

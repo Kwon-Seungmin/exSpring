@@ -34,7 +34,6 @@ public class LunchController {
 	//전체 불러오기
 	@GetMapping("/rest")
 	public ResponseEntity<?> restList(HttpServletRequest request) {
-
 		List<RestDTO> list = new ArrayList<>(lunchService.restList());;
 		return ResponseEntity.ok(list);
 	}
@@ -44,15 +43,17 @@ public class LunchController {
 	 @GetMapping("/member")
 	 public ResponseEntity<?> memberList(MmbrDTO member) {
 		 List<MmbrDTO> List1 = new ArrayList<>(lunchService.memberList());
-
 		 return ResponseEntity.ok(List1);
 	 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 
 	//추천_선호도
 	@GetMapping("/recommend/point")
 	public ResponseEntity<?> recommendPoint(@RequestParam String[] checkedMembers) {
-
 		List<RestDTO> list = new ArrayList<>(lunchService.recommendPoint(checkedMembers));
 		return ResponseEntity.ok(list);
 	}
@@ -60,7 +61,6 @@ public class LunchController {
 	//추천_거리순
 	@GetMapping("/recommend/distance")
 	public ResponseEntity<?> recommendDistance(@RequestParam String[] checkedMembers) {
-
 		List<RestDTO> list = new ArrayList<>(lunchService.recommendDistance(checkedMembers));
 		return ResponseEntity.ok(list);
 	}
@@ -71,7 +71,6 @@ public class LunchController {
 		Map<String, Object> param = new HashMap<>();
 		param.put("checkedMembers", checkedMembers);
 		param.put("restCategory", restCategory);
-
 		param.get("checkedMembers");
 		List<RestDTO> list = new ArrayList<>(lunchService.recommendPoint2(param));
 
@@ -93,14 +92,12 @@ public class LunchController {
 	@GetMapping("search")
 	public ResponseEntity<?> searchRest(@RequestParam String searchRest) {
 		List<RestDTO> list = new ArrayList<>(lunchService.searchRest(searchRest));
-
 		return ResponseEntity.ok(list);
 	}
 
 	 //카테고리 가져오기
 	 @GetMapping("/category")
 	 public ResponseEntity<?> restCategory(RestDTO restCategory) {
-
 		 List<RestDTO> list = new ArrayList<>(lunchService.categoryList());
 		 return ResponseEntity.ok(list);
 	 }
