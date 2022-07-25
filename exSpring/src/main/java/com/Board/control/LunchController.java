@@ -46,10 +46,6 @@ public class LunchController {
 		 return ResponseEntity.ok(List1);
 	 }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> master
 
 	//추천_선호도
 	@GetMapping("/recommend/point")
