@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.Board.dto.MmbrDTO;
@@ -28,18 +27,11 @@ public class LunchController {
 	final LunchService lunchService;
 	final MenuService menuService;
 
-	// 전체 불러오기(사용X)
-	@GetMapping("/rest")
-	public ResponseEntity<?> getRestList(HttpServletRequest request) {
-		List<RestDTO> list = new ArrayList<>(lunchService.getRestList());
-		return ResponseEntity.ok(list);
-	}
-
 	// 멤버불러오기
 	@GetMapping("/member")
 	public ResponseEntity<?> getMmbrList(MmbrDTO member) {
-		List<MmbrDTO> List1 = new ArrayList<>(lunchService.getMmbrList());
-		return ResponseEntity.ok(List1);
+		List<MmbrDTO> list = new ArrayList<>(lunchService.getMmbrList());
+		return ResponseEntity.ok(list);
 	}
 
 	// 검색_식당이름

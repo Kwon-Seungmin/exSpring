@@ -1,4 +1,4 @@
-console.log("start vue");
+
 let lunchVue;
 let contentVue;
 let mapVue;
@@ -314,7 +314,6 @@ document.addEventListener("DOMContentLoaded", () => {
           params: {},
         });
         this.categoryButton = response.data;
-        console.log("load cateogry list");
       },
 
       async categoryRest(e) {
