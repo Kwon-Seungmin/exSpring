@@ -51,21 +51,21 @@ public class LunchController {
 	}
 
 	// 선호도추천_멤버
-	@GetMapping("/recommend/point")
+	@GetMapping("/recommend/member/point")
 	public ResponseEntity<?> recommendByPoint_Member(@RequestParam String[] checkedMembers) {
 		List<RestDTO> list = new ArrayList<>(lunchService.recommendByPoint_Member(checkedMembers));
 		return ResponseEntity.ok(list);
 	}
 
 	// 거리순추천_멤버
-	@GetMapping("/recommend/distance")
+	@GetMapping("/recommend/member/distance")
 	public ResponseEntity<?> recommendByDistance_Member(@RequestParam String[] checkedMembers) {
 		List<RestDTO> list = new ArrayList<>(lunchService.recommendByDistance_Member(checkedMembers));
 		return ResponseEntity.ok(list);
 	}
 
 	// 선호도추천_카테고리
-	@GetMapping("/recommend/point2")
+	@GetMapping("/recommend/category/point")
 	public ResponseEntity<?> recommendByPoint_Category(@RequestParam String[] checkedMembers,
 			@RequestParam String restCategory) {
 		Map<String, Object> param = new HashMap<>();
@@ -78,7 +78,7 @@ public class LunchController {
 	}
 
 	// 거리순추천_카테고리
-	@GetMapping("/recommend/distance2")
+	@GetMapping("/recommend/category/distance")
 	public ResponseEntity<?> recommendByDistance_Category(@RequestParam String[] checkedMembers,
 			@RequestParam String restCategory) {
 		Map<String, Object> param = new HashMap<>();
