@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.Board.dto.MemberDTO;
+import com.Board.dto.MenuDTO;
 
 @Mapper
-public interface MemberMapper {
-	List<MemberDTO> getMemberList();
+public interface MenuMapper {
+	List<MenuDTO> getRestMenu(String restId);
 
 }
