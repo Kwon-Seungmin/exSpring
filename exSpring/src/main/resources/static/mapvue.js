@@ -307,13 +307,24 @@ mapVue = new Vue({
     init() {
       console.log("map Vue init");
     },
+    // async category() {
+    //   const response = await axios({
+    //     method: "get",
+    //     url: "/restaurant/category",
+    //     params: {},
+    //   });
+    //   this.categoryButton = response.data;
+    // },
+
     async category() {
-      const response = await axios({
-        method: "get",
-        url: "/restaurant/category",
-        params: {},
-      });
-      this.categoryButton = response.data;
+      try{
+        const response = await axios.get("/restaurant/category",
+        {params:{}}
+        );
+        this.categoryButton = response.data;
+      } catch {
+      };
+      
     },
 
     async categoryRest(e) {
