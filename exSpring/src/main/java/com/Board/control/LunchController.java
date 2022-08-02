@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.Board.dto.RestaurantDTO;
 import com.Board.dto.SearchDTO;
 import com.Board.service.RestaurantService;
-import com.Board.service.MenuService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,8 +22,6 @@ import lombok.RequiredArgsConstructor;
 public class LunchController {
 
 	final RestaurantService restaurantService;
-
-	final MenuService menuService;
 
 	// 검색_식당이름
 	@GetMapping("/search")
