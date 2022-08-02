@@ -9,9 +9,9 @@
     <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.14.1/build/ol.js"></script>
     <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.14.1/css/ol.css" type="text/css">
-    <script src="vue.js"></script>
+    <script src="vue1.js"></script>
+    <script src="content.vue"></script>
     <link rel="stylesheet" href="style.css">
-
 </head>
 
 <body>
@@ -20,17 +20,16 @@
             <div class="grid-1-a">
                 <div id="contentWrap">
                     <div class="searchdiv">
-                        <input placeholder="Search" type="search" class="input" v-model="searchRest">
+                        <input placeholder="Search" type="search" class="input" v-model="rest">
                         <button type="button" id="btnSearch" @click="search">검색</button><br>
                     </div>
-
                     <div class="memberList">
                         <table class="evenTable">
                             <tr v-if="memberList.length > 0" v-for="(member, index) in memberList">
-                                <td v-if="member.memberId %2 == 0">
+                                <td v-if="member.memberId % 2 == 0">
                                     <label>
                                         <input type="checkbox" name="memberName" :value="member.memberId"
-                                            v-model="checkedMembers">{{member.memberKrName}}
+                                            v-model="checkedMemberList">{{member.memberKrName}}
                                     </label>
                                 </td>
                             </tr>
@@ -40,20 +39,17 @@
                                 <td v-if="member.memberId % 2 == 1">
                                     <label>
                                         <input type="checkbox" name="memberName" :value="member.memberId"
-                                            v-model="checkedMembers">{{member.memberKrName}}
+                                            v-model="checkedMemberList">{{member.memberKrName}}
                                     </label>
                                 </td>
                             </tr>
                         </table>
-
-
                     </div>
                     <div class="memberControl">
                         <button type="button" @click="memberClear">선택 해제</button>
                         <button type="button" value="all" @click="checkAllMembers">전체 선택</button>
                         <button type="button" @click="recommend">추천하기</button>
                     </div>
-
                 </div>
             </div>
 
@@ -69,8 +65,9 @@
                         <label for="radioRD">거리순</label>
                     </div>
                     <div class="scrolltable">
-                        <table v-if="restList.length>0" v-for="(rest,index) in restList" class="restTable"
-                            :value="rest.restId" :lon="rest.restLon" :lat="rest.restLat" @click="restClick">
+                        <table v-if="restList.length>0" v-for="(rest,index) in restList"
+                            class="restTable" :value="rest.restId" :lon="rest.restLon"
+                            :lat="rest.restLat" @click="restClick">
                             <tr>
                                 <td>
                                     {{rest.restName}}
@@ -93,6 +90,7 @@
                 </div>
             </div>
         </div>
+
         <div class="grid-2">
             <div id="mapCtrlWrap">
                 <div class="btn-group">

@@ -1,14 +1,12 @@
 package com.Board.dto;
 
-import org.apache.ibatis.type.Alias;
+
 
 import lombok.Getter;
 import lombok.Setter;
 
-@Alias("RestDTO")
 @Getter
-@Setter
-public class RestDTO {
+public class RestaurantDTO {
 //	rest 테이블
 	String restId;
 	String restName;

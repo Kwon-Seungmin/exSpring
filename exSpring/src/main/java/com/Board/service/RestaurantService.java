@@ -3,26 +3,46 @@ package com.Board.service;
 import java.util.List;
 import java.util.Map;
 
-import com.Board.dto.MmbrDTO;
-import com.Board.dto.RestDTO;
+import org.springframework.stereotype.Service;
 
-public interface LunchService {
+import com.Board.dto.RestaurantDTO;
+import com.Board.dto.SearchDTO;
+import com.Board.mapper.RestaurantMapper;
 
-	public List<RestDTO> getRestList();
+import lombok.RequiredArgsConstructor;
 
-	public List<MmbrDTO> getMmbrList();
+@Service
 
-	public List<RestDTO> searchRest(String searchRest);
+@RequiredArgsConstructor
+public class RestaurantService {
+	private final RestaurantMapper mapper;
 
-	public List<RestDTO> recommendByPoint_Member(String[] checkedMembers);
+	public List<RestaurantDTO> getRestList() {
+		return mapper.getRestList();
+	}
 
-	public List<RestDTO> recommendByDistance_Member(String[] checkedMembers);
+	public List<RestaurantDTO> searchRest(String searchRest) {
+		return mapper.searchRest(searchRest);
+	}
 
-	public List<RestDTO> recommendByPoint_Category(Map<String, Object> param);
+	public List<RestaurantDTO> recommendByPoint_Member(String[] checkedMemberList) {
+		return mapper.recommendByPoint_Member(checkedMemberList);
+	}
 
-	public List<RestDTO> recommendByDistance_Category(Map<String, Object> param);
+	public List<RestaurantDTO> recommendByDistance_Member(String[] checkedMemberList) {
+		return mapper.recommendByDistance_Member(checkedMemberList);
+	}
 
-	public List<RestDTO> getCategoryList();
+	public List<RestaurantDTO> recommendByPoint_Category(Map<String, Object> param) {
+		return mapper.recommendByPoint_Category(param);
+	}
 
-	public List<RestDTO> restByCategory(String restCategory);
+	public List<RestaurantDTO> recommendByDistance_Category(SearchDTO search) {
+		return mapper.recommendByDistance_Category(search);
+	}
+
+	public List<RestaurantDTO> getCategoryList() {
+		return mapper.getCategoryList();
+	}
+
 }

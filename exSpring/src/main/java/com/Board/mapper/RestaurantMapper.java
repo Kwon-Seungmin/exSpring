@@ -5,23 +5,24 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.Board.dto.RestDTO;
+import com.Board.dto.RestaurantDTO;
+import com.Board.dto.SearchDTO;
 
 @Mapper
-public interface RestMapper {
-	List<RestDTO> getRestList();
+public interface RestaurantMapper {
+	List<RestaurantDTO> getRestList();
 
-	List<RestDTO> searchRest(String searchRest);
+	List<RestaurantDTO> searchRest(String searchRest);
 
-	List<RestDTO> recommendByPoint_Member(String[] checkedMembers);
+	List<RestaurantDTO> recommendByPoint_Member(String[] checkedMemberList);
 
-	List<RestDTO> recommendByDistance_Member(String[] checkedMembers);
+	List<RestaurantDTO> recommendByDistance_Member(String[] checkedMembersList);
 
-	List<RestDTO> recommendByPoint_Category(Map<String, Object> param);
+	List<RestaurantDTO> recommendByPoint_Category(Map<String, Object> param);
 
-	List<RestDTO> recommendByDistance_Category(Map<String, Object> param);
+	List<RestaurantDTO> recommendByDistance_Category(SearchDTO search);
 
-	List<RestDTO> getCategoryList();
+	List<RestaurantDTO> getCategoryList();
 
-	List<RestDTO> restByCategory(String restCategory);
+
 }
