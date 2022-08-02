@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    url: jdbc:postgresql://localhost:5432/postgres
+    password: postgres
+  thymeleaf:
+    prefix: classpath:/templates/
+    cache: 'false'
+    suffix: .html
+    check-template-location: 'true'
+mybatis:
+  mapper-locations: mybatis/mapper/*.xml
+  type-aliases-package: com.board.mapper
+  configuration:
+    map-underscore-to-camel-case: 'true'
+logging:
+  level:
+    com:
+      example:
+        web: trace
