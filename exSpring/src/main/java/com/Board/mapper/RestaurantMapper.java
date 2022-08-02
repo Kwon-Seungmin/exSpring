@@ -10,19 +10,18 @@ import com.Board.dto.SearchDTO;
 
 @Mapper
 public interface RestaurantMapper {
-	List<RestaurantDTO> getRestList();
 
-	List<RestaurantDTO> searchRest(String searchRest);
+	List<RestaurantDTO> selectRestaurantByName(String searchRest);
 
-	List<RestaurantDTO> recommendByPoint_Member(String[] checkedMemberList);
+	List<RestaurantDTO> selectRestaurantByPointAndMember(String[] checkedMemberList);
 
-	List<RestaurantDTO> recommendByDistance_Member(String[] checkedMembersList);
+	List<RestaurantDTO> selectRestaurantByDistanceAndMember(String[] checkedMembersList);
 
-	List<RestaurantDTO> recommendByPoint_Category(Map<String, Object> param);
+	List<RestaurantDTO> selectRestaurantByPointAndCategory(SearchDTO search);
 
-	List<RestaurantDTO> recommendByDistance_Category(SearchDTO search);
+	List<RestaurantDTO> selectRestaurantByDistanceAndCategory(SearchDTO search);
 
-	List<RestaurantDTO> getCategoryList();
+	List<RestaurantDTO> selectCategoryList();
 
 
 }

@@ -25,50 +25,49 @@ public class LunchController {
 
 	// 검색_식당이름
 	@GetMapping("/search")
-	public ResponseEntity<?> searchRest(@RequestParam String rest) {
-		List<RestaurantDTO> list = restaurantService.searchRest(rest);
+	public ResponseEntity<?> selectRestaurantByName(@RequestParam String rest) {
+		List<RestaurantDTO> list = restaurantService.selectRestaurantByName(rest);
 		return ResponseEntity.ok(list);
 	}
 
 	// 선호도추천_멤버
 	@GetMapping("/point/member")
-	public ResponseEntity<?> recommendByPoint_Member(@RequestParam String[] checkedMemberList) {
-		List<RestaurantDTO> list = restaurantService.recommendByPoint_Member(checkedMemberList);
+	public ResponseEntity<?> selectRestaurantByPointAndMember(@RequestParam String[] checkedMemberList) {
+		List<RestaurantDTO> list = restaurantService.selectRestaurantByPointAndMember(checkedMemberList);
 		return ResponseEntity.ok(list);
 	}
 
 	// 거리순추천_멤버
 	@GetMapping("/distance/member")
-	public ResponseEntity<?> recommendByDistance_Member(@RequestParam String[] checkedMemberList) {
-		List<RestaurantDTO> list = restaurantService.recommendByDistance_Member(checkedMemberList);
+	public ResponseEntity<?> selectRestaurantByDistanceAndMember(@RequestParam String[] checkedMemberList) {
+		List<RestaurantDTO> list = restaurantService.selectRestaurantByDistanceAndMember(checkedMemberList);
 		return ResponseEntity.ok(list);
 	}
 
 	// 선호도추천_카테고리
 	@GetMapping("/point/category")
-	public ResponseEntity<?> recommendByPoint_Category(@RequestParam String[] checkedMemberList,
+	public ResponseEntity<?> selectRestaurantByPointAndCategory(@RequestParam String[] checkedMemberList,
 			@RequestParam String restCategory) {
-		Map<String, Object> param = new HashMap<>();
-		param.put("checkedMemberList", checkedMemberList);
-		param.put("restCategory", restCategory);
-		List<RestaurantDTO> list = restaurantService.recommendByPoint_Category(param);
+
+		SearchDTO search = new SearchDTO(checkedMemberList, restCategory);
+		List<RestaurantDTO> list = restaurantService.selectRestaurantByPointAndCategory(search);
 		return ResponseEntity.ok(list);
 	}
 
 	// 거리순추천_카테고리
 	@GetMapping("/distance/category")
-	public ResponseEntity<?> recommendByDistance_Category(@RequestParam String[] checkedMemberList,
+	public ResponseEntity<?> selectRestaurantByDistanceAndCategory(@RequestParam String[] checkedMemberList,
 			@RequestParam String restCategory) {
 		SearchDTO search = new SearchDTO(checkedMemberList, restCategory);
-		List<RestaurantDTO> list = restaurantService.recommendByDistance_Category(search);
+		List<RestaurantDTO> list = restaurantService.selectRestaurantByDistanceAndCategory(search);
 		System.out.println(list);
 		return ResponseEntity.ok(list);
 	}
 
 	// 카테고리 불러오기
 	@GetMapping("/category")
-	public ResponseEntity<?> getCategoryList() {
-		List<RestaurantDTO> list = restaurantService.getCategoryList();
+	public ResponseEntity<?> selectCategoryList() {
+		List<RestaurantDTO> list = restaurantService.selectCategoryList();
 		return ResponseEntity.ok(list);
 	}
 

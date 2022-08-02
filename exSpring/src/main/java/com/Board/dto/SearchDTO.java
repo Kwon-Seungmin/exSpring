@@ -3,6 +3,7 @@ package com.Board.dto;
 import lombok.Getter;
 
 @Getter
+
 public class SearchDTO {
 	String[] checkedMemberList;
 	String restCategory;

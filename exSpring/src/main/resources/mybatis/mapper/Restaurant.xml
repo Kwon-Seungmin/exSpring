@@ -2,20 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.Board.mapper.RestaurantMapper">
 
-	<select id="getRestList" resultType="com.Board.dto.RestaurantDTO">
-		SELECT *
-		FROM rest
-	</select>
 
-	<select id="searchRest" parameterType="String"
+	<select id="selectRestaurantByName" parameterType="String"
 		resultType="com.Board.dto.RestaurantDTO">
 		SELECT *
 		FROM rest
-		WHERE rest_name LIKE CONCAT('%', #{value},
-		'%')
+		WHERE rest_name LIKE CONCAT('%', #{value},'%')
 	</select>
 
-	<select id="recommendByPoint_Member" parameterType="String"
+	<select id="selectRestaurantByPointAndMember" parameterType="String"
 		resultType="com.Board.dto.RestaurantDTO">
 		SELECT p.point, d.dist,
             CASE
@@ -63,7 +58,7 @@
 	</select>
 
 
-	<select id="recommendByDistance_Member" parameterType="String"
+	<select id="selectRestaurantByDistanceAndMember" parameterType="String"
 		resultType="com.Board.dto.RestaurantDTO">
 		SELECT p.point, d.dist,
                CASE WHEN d.dist <![CDATA[<=]]> 300 THEN 5
@@ -108,7 +103,7 @@
 	</select>
 
 
-	<select id="recommendByPoint_Category" parameterType="Map"
+	<select id="selectRestaurantByPointAndCategory" parameterType="com.Board.dto.SearchDTO"
 		resultType="com.Board.dto.RestaurantDTO">
 		SELECT p.point, d.dist,
                CASE
@@ -152,7 +147,7 @@
 		ORDER BY p.point desc, d.dist asc
 	</select>
 
-	<select id="recommendByDistance_Category" parameterType="Map"
+	<select id="selectRestaurantByDistanceAndCategory" parameterType="com.Board.dto.SearchDTO"
 		resultType="com.Board.dto.RestaurantDTO">
 		SELECT p.point, d.dist,
                CASE
@@ -197,7 +192,7 @@
 		ORDER BY d.dist asc, p.point desc
 	</select>
 
-	<select id="getCategoryList" resultType="com.Board.dto.RestaurantDTO">
+	<select id="selectCategoryList" resultType="com.Board.dto.RestaurantDTO">
 		SELECT DISTINCT rest_category
 		FROM rest
 		ORDER BY rest_category ASC
