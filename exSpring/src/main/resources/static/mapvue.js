@@ -2,7 +2,6 @@
 let lunchVue;
 let contentVue;
 let mapVue;
-
 let lastSelectedCategory = "";
 let sumLon = 0;
 let sumLat = 0;
@@ -170,25 +169,40 @@ contentVue = new Vue({
       console.log("init content vue");
     },
     async member() {
-      const response = await axios({
-        method: "get",
-        url: "/member",
-        params: {},
-      });
-      this.memberList = response.data;
+      // const response = await axios({
+      //   method: "get",
+      //   url: "/member",
+      //   params: {},
+      // });
+      // this.memberList = response.data;
 
-      this.checkAllMembers();
+      // this.checkAllMembers();
+
+      try{
+        const response = await axios.get("/member",
+        {parmas:{}});
+        this.memberList = response.data;
+        this.checkAllMembers()
+      }
+      catch{
+        alert(error);
+      }
     },
+
     async recommend() {
       lastSelectedCategory = "";
-
-      const response = await axios({
-        method: "get",
-        url: `/restaurant/${lunchVue.picked}/member`,
-        params: {
-          checkedMemberList: this.checkedMemberList.join(","),
-        },
-      });
+      // const response = await axios({
+      //   method: "get",
+      //   url: `/restaurant/${lunchVue.picked}/member`,
+      //   params: {
+      //     checkedMemberList: this.checkedMemberList.join(","),
+      //   },
+      // });
+      try{
+      const response = await axios.get(`/restaurant/${lunchVue.picked}/member`,
+      {params:{
+            checkedMemberList: this.checkedMemberList.join(",")}
+          });
 
       lunchVue.restList = response.data;
 
@@ -204,16 +218,25 @@ contentVue = new Vue({
       );
 
       vectorSource.addFeature(gaiaIconFeature);
+      } catch{
+        alert(error);
+      }
     },
 
     async search() {
-      const response = await axios({
-        method: "get",
-        url: "/restaurant/search",
-        params: {
-          rest: this.rest,
-        },
-      });
+      // const response = await axios({
+      //   method: "get",
+      //   url: "/restaurant/search",
+      //   params: {
+      //     rest: this.rest,
+      //   },
+      // });
+
+      try {
+        const response = await axios.get("/restaurant/search",
+        {params:{
+              rest: this.rest,
+            }});
       if (contentVue.rest == "") {
         alert("식당 명을 입력해주세요.");
         return;
@@ -228,6 +251,9 @@ contentVue = new Vue({
         addIcon(rest.restLon, rest.restLat, rest.restCategory);
       });
       vectorSource.addFeature(gaiaIconFeature);
+    } catch{
+      alert(error);
+    }
     },
     memberClear() {
       this.checkedMemberList = [];
@@ -243,6 +269,9 @@ contentVue = new Vue({
     console.log("create content vue");
   },
 });
+
+contentVue.init();
+contentVue.member();
 
 // lunch vue 설정
 lunchVue = new Vue({
@@ -266,17 +295,25 @@ lunchVue = new Vue({
       let menuLon = e.currentTarget.getAttribute("lon");
       let menuLat = e.currentTarget.getAttribute("lat");
 
-      const response = await axios({
-        method: "get",
-        url: "/menu",
-        params: {
-          restId: e.currentTarget.getAttribute("value"),
-        },
-      });
+      // const response = await axios({
+      //   method: "get",
+      //   url: "/menu",
+      //   params: {
+      //     restId: e.currentTarget.getAttribute("value"),
+      //   },
+      // });
+      try{
+        const response = await axios.get("/menu",
+        {params: {
+              restId: e.currentTarget.getAttribute("value"),
+            }});
 
       menuList = response.data;
       makePopup(menuLon, menuLat, menuList);
       zoomRest(menuLon, menuLat);
+      } catch{
+        alert(error);
+      }
     },
 
     changeRadio() {
@@ -295,6 +332,8 @@ lunchVue = new Vue({
     console.log("create lunch vue");
   },
 });
+
+lunchVue.init();
 
 //mapVue 설정
 mapVue = new Vue({
@@ -344,22 +383,6 @@ mapVue = new Vue({
       //     restCategory: this.restCategory,
       //   },
       // });
-
-      // lunchVue.restList = response.data;
-
-      // vectorSource.clear();
-      // lunchVue.restList.forEach((rest) => {
-      //   addIcon(rest.restLon, rest.restLat, lastSelectedCategory);
-      //   sumLon += rest.restLon * 1;
-      //   sumLat += rest.restLat * 1;
-      // });
-
-      // zoomCenter(
-      //   sumLon / lunchVue.restList.length,
-      //   sumLat / lunchVue.restList.length
-      // );
-
-      // vectorSource.addFeature(gaiaIconFeature);
       try{
         const response = await axios.get(`/restaurant/${lunchVue.picked}/category`,
         {params: {
@@ -387,9 +410,6 @@ mapVue = new Vue({
         alert("error");
       };
 
-
-
-
     },
     wmsOn() {
       wmsLayerOn();
@@ -404,11 +424,6 @@ mapVue = new Vue({
   created() {},
 });
 
-  
-
-  contentVue.init();
-  contentVue.member();
-  lunchVue.init();
   mapVue.init();
   mapVue.category();
 });
