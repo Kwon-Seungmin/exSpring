@@ -323,8 +323,8 @@ mapVue = new Vue({
         );
         this.categoryButton = response.data;
       } catch {
+        alert("error");
       };
-      
     },
 
     async categoryRest(e) {
@@ -336,15 +336,37 @@ mapVue = new Vue({
       let target = e?.currentTarget;
       if (target) this.restCategory = target.value;
       lastSelectedCategory = this.restCategory;
-      const response = await axios({
-        method: "get",
-        url: `/restaurant/${lunchVue.picked}/category`,
-        params: {
-          checkedMemberList: contentVue.checkedMemberList.join(","),
-          restCategory: this.restCategory,
-        },
-      });
+      // const response = await axios({
+      //   method: "get",
+      //   url: `/restaurant/${lunchVue.picked}/category`,
+      //   params: {
+      //     checkedMemberList: contentVue.checkedMemberList.join(","),
+      //     restCategory: this.restCategory,
+      //   },
+      // });
 
+      // lunchVue.restList = response.data;
+
+      // vectorSource.clear();
+      // lunchVue.restList.forEach((rest) => {
+      //   addIcon(rest.restLon, rest.restLat, lastSelectedCategory);
+      //   sumLon += rest.restLon * 1;
+      //   sumLat += rest.restLat * 1;
+      // });
+
+      // zoomCenter(
+      //   sumLon / lunchVue.restList.length,
+      //   sumLat / lunchVue.restList.length
+      // );
+
+      // vectorSource.addFeature(gaiaIconFeature);
+      try{
+        const response = await axios.get(`/restaurant/${lunchVue.picked}/category`,
+        {params: {
+              checkedMemberList: contentVue.checkedMemberList.join(","),
+              restCategory: this.restCategory,
+            },}
+            );
       lunchVue.restList = response.data;
 
       vectorSource.clear();
@@ -360,6 +382,14 @@ mapVue = new Vue({
       );
 
       vectorSource.addFeature(gaiaIconFeature);
+
+      } catch {
+        alert("error");
+      };
+
+
+
+
     },
     wmsOn() {
       wmsLayerOn();
