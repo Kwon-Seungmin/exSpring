@@ -169,15 +169,6 @@ contentVue = new Vue({
       console.log("init content vue");
     },
     async member() {
-      // const response = await axios({
-      //   method: "get",
-      //   url: "/member",
-      //   params: {},
-      // });
-      // this.memberList = response.data;
-
-      // this.checkAllMembers();
-
       try{
         const response = await axios.get("/member",
         {parmas:{}});
@@ -191,13 +182,6 @@ contentVue = new Vue({
 
     async recommend() {
       lastSelectedCategory = "";
-      // const response = await axios({
-      //   method: "get",
-      //   url: `/restaurant/${lunchVue.picked}/member`,
-      //   params: {
-      //     checkedMemberList: this.checkedMemberList.join(","),
-      //   },
-      // });
       try{
       const response = await axios.get(`/restaurant/${lunchVue.picked}/member`,
       {params:{
@@ -224,14 +208,6 @@ contentVue = new Vue({
     },
 
     async search() {
-      // const response = await axios({
-      //   method: "get",
-      //   url: "/restaurant/search",
-      //   params: {
-      //     rest: this.rest,
-      //   },
-      // });
-
       try {
         const response = await axios.get("/restaurant/search",
         {params:{
@@ -294,14 +270,6 @@ lunchVue = new Vue({
     async restClick(e) {
       let menuLon = e.currentTarget.getAttribute("lon");
       let menuLat = e.currentTarget.getAttribute("lat");
-
-      // const response = await axios({
-      //   method: "get",
-      //   url: "/menu",
-      //   params: {
-      //     restId: e.currentTarget.getAttribute("value"),
-      //   },
-      // });
       try{
         const response = await axios.get("/menu",
         {params: {
@@ -346,15 +314,6 @@ mapVue = new Vue({
     init() {
       console.log("map Vue init");
     },
-    // async category() {
-    //   const response = await axios({
-    //     method: "get",
-    //     url: "/restaurant/category",
-    //     params: {},
-    //   });
-    //   this.categoryButton = response.data;
-    // },
-
     async category() {
       try{
         const response = await axios.get("/restaurant/category",
@@ -375,14 +334,6 @@ mapVue = new Vue({
       let target = e?.currentTarget;
       if (target) this.restCategory = target.value;
       lastSelectedCategory = this.restCategory;
-      // const response = await axios({
-      //   method: "get",
-      //   url: `/restaurant/${lunchVue.picked}/category`,
-      //   params: {
-      //     checkedMemberList: contentVue.checkedMemberList.join(","),
-      //     restCategory: this.restCategory,
-      //   },
-      // });
       try{
         const response = await axios.get(`/restaurant/${lunchVue.picked}/category`,
         {params: {
