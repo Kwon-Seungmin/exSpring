@@ -1,3 +1,4 @@
+window.onload = function() {
 
 let lunchVue;
 let contentVue;
@@ -6,375 +7,445 @@ let lastSelectedCategory = "";
 let sumLon = 0;
 let sumLat = 0;
 
-document.addEventListener("DOMContentLoaded", () => {
-  //icon 추가
-  function addIcon(a, b, c) {
-    restIconFeature = new ol.Feature({
-      geometry: new ol.geom.Point([a, b]).transform("EPSG:4326", "EPSG:3857"),
-    });
-
-    let iconStyle = new ol.style.Style({
-      image: new ol.style.Icon({
-        opacity: 1,
-        scale: 0.18,
-        src: `./img/${c}.png`,
-      }),
-      zindex: 10,
-    });
-
-    restIconFeature.setStyle(iconStyle);
-    vectorSource.addFeature(restIconFeature);
-  }
-
-  let gaiaIconFeature = new ol.Feature({
-    geometry: new ol.geom.Point([127.391055, 36.428902]).transform(
-      "EPSG:4326",
-      "EPSG:3857"
-    ),
+//icon 추가
+function addIcon(a, b, c) {
+  restIconFeature = new ol.Feature({
+    geometry: new ol.geom.Point([a, b]).transform("EPSG:4326", "EPSG:3857"),
   });
 
   let iconStyle = new ol.style.Style({
     image: new ol.style.Icon({
       opacity: 1,
-      scale: 0.5,
-      src: "./img/gaia3d.png",
+      scale: 0.18,
+      src: `./img/${c}.png`,
     }),
     zindex: 10,
   });
 
-  gaiaIconFeature.setStyle(iconStyle);
+  restIconFeature.setStyle(iconStyle);
+  vectorSource.addFeature(restIconFeature);
+}
 
-  let vectorSource = new ol.source.Vector({
-    features: [gaiaIconFeature]
+let gaiaIconFeature = new ol.Feature({
+  geometry: new ol.geom.Point([127.391055, 36.428902]).transform(
+    "EPSG:4326",
+    "EPSG:3857"
+  ),
+});
+
+let iconStyle = new ol.style.Style({
+  image: new ol.style.Icon({
+    opacity: 1,
+    scale: 0.5,
+    src: "./img/gaia3d.png",
+  }),
+  zindex: 10,
+});
+
+gaiaIconFeature.setStyle(iconStyle);
+
+let vectorSource = new ol.source.Vector({
+  features: [gaiaIconFeature],
+});
+
+let vectorLayer = new ol.layer.Vector({
+  source: vectorSource,
+  zindex: 999,
+});
+
+let rasterLayer = new ol.layer.Tile({
+  source: new ol.source.OSM(),
+});
+
+//geoserver에서 불러옴
+let wms = new ol.layer.Tile({
+  source: new ol.source.TileWMS({
+    url: "http://localhost:8180/geoserver/seungminlunch/wms?service=WMS", //레이어 url
+    params: {
+      VERSION: "1.1.0", //버전
+      LAYERS: "seungminlunch:rest", //작업공간: 레이어 명
+      BBOX: [
+        127.38111114501953, 36.413265228271484, 127.40605926513672,
+        36.43330001831055,
+      ],
+      SRS: "EPSG:4326", //SRID
+      FORMAT: "image/png",
+    },
+    serverType: "geoserver",
+    title: "wms",
+  }),
+  visible: true,
+  zindex: 1,
+});
+
+let map = new ol.Map({
+  target: "map",
+  layers: [rasterLayer, wms, vectorLayer],
+  view: new ol.View({
+    zoom: 17,
+    center: ol.proj.fromLonLat([127.391055, 36.428902]),
+  }),
+});
+
+//팝업창
+let popupTable = document.createElement("table");
+popupTable.classList.add("popupTable");
+
+let popupCloser = document.createElement("a");
+popupCloser.classList.add("popupTableCloser");
+popupCloser.href = "#";
+
+document.body.appendChild(popupTable);
+
+let overlay = new ol.Overlay({
+  element: popupTable,
+});
+
+function makePopup(a, b, c) {
+  popupTable.innerHTML = "";
+
+  popupTable.appendChild(popupCloser);
+
+  let coordinate = new ol.geom.Point([a, b]).transform(
+    "EPSG:4326",
+    "EPSG:3857"
+  );
+  c.forEach((menu) => {
+    let menuTr = document.createElement("tr");
+    popupTable.appendChild(menuTr);
+
+    let menuTd = document.createElement("td");
+    menuTd.classList.add();
+    menuTr.appendChild(menuTd);
+    menuTd.innerHTML = menu.menu + menu.price;
   });
 
-  let vectorLayer = new ol.layer.Vector({
-    source: vectorSource,
-    zindex: 999,
-  });
+  map.addOverlay(overlay);
+  overlay.setPosition(coordinate.flatCoordinates);
+}
 
-  let rasterLayer = new ol.layer.Tile({
-    source: new ol.source.OSM()
-  });
+popupCloser.onclick = function () {
+  overlay.setPosition(undefined);
+  popupCloser.blur();
+  return false;
+};
 
-  //geoserver에서 불러옴
-  let wms = new ol.layer.Tile({
-    source: new ol.source.TileWMS({
-      url: "http://localhost:8180/geoserver/seungminlunch/wms?service=WMS", //레이어 url
+//회사 중심
+function zoomGaia() {
+  map.getView().setZoom(17);
+  map.getView().setCenter(ol.proj.fromLonLat([127.391055, 36.428902]));
+}
+//식당 중심
+function zoomRest(x, y) {
+  map.getView().setZoom(18);
+  map.getView().setCenter(ol.proj.fromLonLat([x, y]));
+}
+//카테고리 중심
+function zoomCenter(a, b) {
+  map.getView().setZoom(17);
+  map.getView().setCenter(ol.proj.fromLonLat([a, b]));
+  sumLon = 0;
+  sumLat = 0;
+}
+
+// geoserver wms on/off
+function wmsLayerOn() {
+  wms.setVisible(true);
+}
+function wmsLayerOff() {
+  wms.setVisible(false);
+}
+
+document.getElementById("btnSearch").addEventListener("click", search);
+
+let checkedMemberList = [];
+let rest;
+
+document.getElementById("btnRecommend").addEventListener("click", recommend);
+
+async function recommend() {
+  lastSelectedCategory = "";
+  try {
+    const response = await axios.get(`/restaurant/${picked}/member`, {
       params: {
-        VERSION: "1.1.0", //버전
-        LAYERS: "seungminlunch:rest", //작업공간: 레이어 명
-        BBOX: [
-          127.38111114501953, 36.413265228271484, 127.40605926513672,
-          36.43330001831055,
-        ],
-        SRS: "EPSG:4326", //SRID
-        FORMAT: "image/png",
+        checkedMemberList: checkedMemberList.join(","),
       },
-      serverType: "geoserver",
-      title: "wms"
-    }),
-    visible: true,
-    zindex: 1
-  });
-
-  let map = new ol.Map({
-    target: "map",
-    layers: [rasterLayer, wms, vectorLayer],
-    view: new ol.View({
-      zoom: 17,
-      center: ol.proj.fromLonLat([127.391055, 36.428902])
-    }),
-  });
-
-  //팝업창
-  let popupTable = document.createElement("table");
-  popupTable.classList.add("popupTable");
-
-  let popupCloser = document.createElement("a");
-  popupCloser.classList.add("popupTableCloser");
-  popupCloser.href = "#";
-
-  document.body.appendChild(popupTable);
-
-  let overlay = new ol.Overlay({
-    element: popupTable,
-  });
-
-  function makePopup(a, b, c) {
-    popupTable.innerHTML = "";
-
-    popupTable.appendChild(popupCloser);
-
-    let coordinate = new ol.geom.Point([a, b]).transform(
-      "EPSG:4326",
-      "EPSG:3857"
-    );
-    c.forEach((menu) => {
-      let menuTr = document.createElement("tr");
-      popupTable.appendChild(menuTr);
-
-      let menuTd = document.createElement("td");
-      menuTd.classList.add();
-      menuTr.appendChild(menuTd);
-      menuTd.innerHTML = menu.menu + menu.price;
     });
 
-    map.addOverlay(overlay);
-    overlay.setPosition(coordinate.flatCoordinates);
+    restList = response.data;
+
+    vectorSource.clear();
+    restList.forEach((rest) => {
+      addIcon(rest.restLon, rest.restLat, rest.restCategory);
+      sumLon += rest.restLon * 1;
+      sumLat += rest.restLat * 1;
+    });
+    zoomCenter(sumLon / restList.length, sumLat / restList.length);
+
+    vectorSource.addFeature(gaiaIconFeature);
+  } catch (e) {
+    alert(e);
   }
+}
 
-  popupCloser.onclick = function () {
-    overlay.setPosition(undefined);
-    popupCloser.blur();
-    return false;
-  };
-
-  //회사 중심
-  function zoomGaia() {
-    map.getView().setZoom(17);
-    map.getView().setCenter(ol.proj.fromLonLat([127.391055, 36.428902]));
-  }
-  //식당 중심
-  function zoomRest(x, y) {
-    map.getView().setZoom(18);
-    map.getView().setCenter(ol.proj.fromLonLat([x, y]));
-  }
-  //카테고리 중심
-  function zoomCenter(a, b) {
-    map.getView().setZoom(17);
-    map.getView().setCenter(ol.proj.fromLonLat([a, b]));
-    sumLon = 0;
-    sumLat = 0;
-  }
-
-  // geoserver wms on/off
-  function wmsLayerOn() {
-    wms.setVisible(true);
-  }
-  function wmsLayerOff() {
-    wms.setVisible(false);
-  }
-  
-//contentVue 설정
-contentVue = new Vue({
-  el: "#contentWrap",
-  data: {
-    memberList: [],
-    checkedMemberList: [],
-    rest: "",
-  },
-  methods: {
-    init() {
-      console.log("init content vue");
-    },
-    async member() {
-      try{
-        const response = await axios.get("/member",
-        {parmas:{}});
-        this.memberList = response.data;
-        this.checkAllMembers()
-      }
-      catch{
-        alert(error);
-      }
-    },
-
-    async recommend() {
-      lastSelectedCategory = "";
-      try{
-      const response = await axios.get(`/restaurant/${lunchVue.picked}/member`,
-      {params:{
-            checkedMemberList: this.checkedMemberList.join(",")}
-          });
-
-      lunchVue.restList = response.data;
-
-      vectorSource.clear();
-      lunchVue.restList.forEach((rest) => {
-        addIcon(rest.restLon, rest.restLat, rest.restCategory);
-        sumLon += rest.restLon * 1;
-        sumLat += rest.restLat * 1;
-      });
-      zoomCenter(
-        sumLon / lunchVue.restList.length,
-        sumLat / lunchVue.restList.length
-      );
-
-      vectorSource.addFeature(gaiaIconFeature);
-      } catch{
-        alert(error);
-      }
-    },
-
-    async search() {
-      try {
-        const response = await axios.get("/restaurant/search",
-        {params:{
-              rest: this.rest,
-            }});
-      if (contentVue.rest == "") {
-        alert("식당 명을 입력해주세요.");
-        return;
-      }
-
-      lunchVue.restList = response.data;
-      if (lunchVue.restList.length == 0) {
-        alert("검색 결과가 없습니다.");
-        return;
-      }
-      lunchVue.restList.forEach((rest) => {
-        addIcon(rest.restLon, rest.restLat, rest.restCategory);
-      });
-      vectorSource.addFeature(gaiaIconFeature);
-    } catch{
-      alert(error);
+async function search() {
+  let rest = document.getElementById("searchRest").value;
+  console.log(rest);
+  try {
+    const response = await axios.get("/restaurant/search", {
+      params: {
+        rest: rest,
+      },
+    });
+    if (rest == "") {
+      alert("식당 명을 입력해주세요.");
+      return;
     }
-    },
-    memberClear() {
-      this.checkedMemberList = [];
-    },
-    checkAllMembers() {
-      this.checkedMemberList = [];
-      this.memberList.forEach((member) => {
-        this.checkedMemberList.push(member.memberId);
-      });
-    },
-  },
-  created() {
-    console.log("create content vue");
-  },
-});
+    restList = response.data;
+    console.log(response.data);
+    console.log(restList.length);
+    if (restList.length == 0) {
+      document.getElementById("scrolltable").innerHTML = "";
+      let nottingTable = document.createElement("table");
+      nottingTable.classList.add("restTable");
+      document.getElementById("scrolltable").appendChild(nottingTable);
+      nottingTable.innerHTML = "결과 없음";
+      document.getElementById("restListLength").innerHTML = restList.length;
 
-contentVue.init();
-contentVue.member();
+      alert("검색 결과가 없습니다.");
+      return;
+    }
+    restList.forEach((rest) => {
+      console.log(rest.restLon);
+      addIcon(rest.restLon, rest.restLat, rest.restCategory);
+    });
+    makeRestTable(restList);
+    document.getElementById("restListLength").innerHTML = restList.length;
+  } catch (e) {
+    alert(e);
+  }
+}
+
+function makeRestTable(a) {
+  document.getElementById("scrolltable").innerHTML = "";
+  a.forEach((rest) => {
+    let restTable = document.createElement("table");
+    restTable.classList.add("restTable");
+
+    document.getElementById("scrolltable").appendChild(restTable);
+
+    let restTr = document.createElement("tr");
+    restTable.appendChild(restTr);
+
+    let restNameTd = document.createElement("td");
+    restNameTd.innerHTML = rest.restName;
+    let restCategoryTd = document.createElement("td");
+    restCategoryTd.innerHTML = rest.restCategory;
+    restCategoryTd.style.float = "right";
+
+    restTr.appendChild(restNameTd);
+    restTr.appendChild(restCategoryTd);
+
+    let restAddrTd = document.createElement("td");
+    restAddrTd.innerHTML = rest.restAddr;
+    restAddrTd.setAttribute("colspan", "2");
+    restTable.appendChild(restAddrTd);
+  });
+}
 
 // lunch vue 설정
-lunchVue = new Vue({
-  el: "#lunchWrap",
-  data: {
-    picked: "point",
-    restList: [],
-    restId: "",
-    restMenuList: [],
-  },
-  methods: {
-    init() {
-      console.log("init lunch vue");
-    },
 
-    restClear() {
-      this.restList = [];
-    },
+let picked = "point";
+let restList = [];
+let restId = "";
+let restMenuList = [];
 
-    async restClick(e) {
-      let menuLon = e.currentTarget.getAttribute("lon");
-      let menuLat = e.currentTarget.getAttribute("lat");
-      try{
-        const response = await axios.get("/menu",
-        {params: {
-              restId: e.currentTarget.getAttribute("value"),
-            }});
+function restClear() {
+  this.restList = [];
+}
 
-      menuList = response.data;
-      makePopup(menuLon, menuLat, menuList);
-      zoomRest(menuLon, menuLat);
-      } catch{
-        alert(error);
-      }
-    },
+async function restClick(e) {
+  let menuLon = e.currentTarget.getAttribute("lon");
+  let menuLat = e.currentTarget.getAttribute("lat");
+  try {
+    const response = await axios.get("/menu", {
+      params: {
+        restId: e.currentTarget.getAttribute("value"),
+      },
+    });
 
-    changeRadio() {
-      //최근 목록 출처
-      if (lastSelectedCategory == "") {
-        contentVue.recommend();
-        return;
-      }
-      if (lastSelectedCategory != "") {
-        mapVue.categoryRest();
-        return;
-      }
-    },
-  },
-  created() {
-    console.log("create lunch vue");
-  },
-});
+    menuList = response.data;
+    makePopup(menuLon, menuLat, menuList);
+    zoomRest(menuLon, menuLat);
+  } catch {
+    alert(error);
+  }
+}
 
-lunchVue.init();
+function changeRadio() {
+  //최근 목록 출처
+  if (lastSelectedCategory == "") {
+    contentVue.recommend();
+    return;
+  }
+  if (lastSelectedCategory != "") {
+    mapVue.categoryRest();
+    return;
+  }
+}
 
 //mapVue 설정
-mapVue = new Vue({
-  el: "#mapCtrlWrap",
-  data: {
-    categoryButton: [],
-    restCategory: "",
-  },
-  methods: {
-    init() {
-      console.log("map Vue init");
-    },
-    async category() {
-      try{
-        const response = await axios.get("/restaurant/category",
-        {params:{}}
-        );
-        this.categoryButton = response.data;
-      } catch {
-        alert("error");
-      };
-    },
 
-    async categoryRest(e) {
-      if (contentVue.checkedMemberList.length == 0) {
-        alert("인원을 선택해주세요.");
-        return;
-      }
+let restCategory = "";
 
-      let target = e?.currentTarget;
-      if (target) this.restCategory = target.value;
-      lastSelectedCategory = this.restCategory;
-      try{
-        const response = await axios.get(`/restaurant/${lunchVue.picked}/category`,
-        {params: {
-              checkedMemberList: contentVue.checkedMemberList.join(","),
-              restCategory: this.restCategory,
-            },}
-            );
-      lunchVue.restList = response.data;
+function wmsOn() {
+  wmsLayerOn();
+}
 
-      vectorSource.clear();
-      lunchVue.restList.forEach((rest) => {
-        addIcon(rest.restLon, rest.restLat, lastSelectedCategory);
-        sumLon += rest.restLon * 1;
-        sumLat += rest.restLat * 1;
-      });
+function wmsOff() {
+  wmsLayerOff();
+}
 
-      zoomCenter(
-        sumLon / lunchVue.restList.length,
-        sumLat / lunchVue.restList.length
-      );
+function gaiaOn() {
+  zoomGaia();
+}
 
-      vectorSource.addFeature(gaiaIconFeature);
 
-      } catch {
-        alert("error");
-      };
+function checkAllMembers() {
+  document.getElementsByClassName("memberName").setAttribute("checked", "true");
+}
 
-    },
-    wmsOn() {
-      wmsLayerOn();
-    },
-    wmsOff() {
-      wmsLayerOff();
-    },
-    gaiaOn() {
-      zoomGaia();
-    },
-  },
-  created() {},
-});
+let memberList = [];
+let memberEvenTable = document.createElement("table");
+memberEvenTable.classList.add("memberEvenTable");
 
-  mapVue.init();
-  mapVue.category();
-});
+let memberOddTable = document.createElement("table");
+memberOddTable.classList.add("memberOddTable");
+
+
+document.querySelector(".memberList").appendChild(memberEvenTable);
+document.querySelector(".memberList").appendChild(memberOddTable);
+
+
+async function selectMember() {
+  try {
+    const response = await axios.get("/member", { parmas: {} });
+    memberList = response.data;
+
+    setMemberList(memberList);
+  } catch (e) {
+    throw e;
+  }
+}
+
+function setMemberList(memberList) {
+  memberList.forEach((member) => {
+    let memberTr = document.createElement("tr");
+
+    let memberTd = document.createElement("td");
+    memberTr.appendChild(memberTd);
+
+    let memberLabel = document.createElement("label");
+    memberTd.appendChild(memberLabel);
+
+    let memberCheckBox = document.createElement("input");
+    memberCheckBox.setAttribute("type", "checkbox");
+    memberCheckBox.setAttribute("name", "memberName");
+    memberCheckBox.setAttribute("id", member.memberId);
+    memberCheckBox.setAttribute("checked", "true");
+    
+    memberLabel.appendChild(memberCheckBox);
+    memberLabel.innerHTML += member.memberKrName;
+
+    checkedMemberList.push(member.memberId);
+    if (member.memberId % 2 == 0) {
+      memberEvenTable.appendChild(memberTr);
+    } else if (member.memberId % 2 == 1) {
+      memberOddTable.appendChild(memberTr);
+    }
+  });
+}
+
+selectMember();
+
+
+
+document.getElementById("clearAllMembers")
+  .addEventListener("click", clearAllMembers);
+function clearAllMembers() {
+  checkedMemberList = [];
+  console.log(memberList);
+  memberList.forEach((member) => {
+    console.log(member.memberId);
+    document.getElementById(member.memberId).checked = false;
+    console.log(document.getElementById(member.memberId));
+
+  })
+}
+
+
+let categoryButton = [];
+let categoryTable = document.createElement("table");
+categoryTable.classList.add("categoryTable");
+
+document.querySelector(".btn-group").appendChild(categoryTable);
+
+async function category() {
+  try {
+    const response = await axios.get("/restaurant/category", { params: {} });
+    categoryButton = response.data;
+
+    categoryButton.forEach((category) => {
+      let categoryTr = document.createElement("tr");
+      categoryTable.appendChild(categoryTr);
+
+      let categoryTd = document.createElement("td");
+      categoryTr.appendChild(categoryTd);
+
+      let categoryBtn = document.createElement("button");
+      categoryBtn.setAttribute("type", "button");
+      categoryBtn.setAttribute("name", "category");
+      
+      categoryTd.appendChild(categoryBtn);
+      categoryBtn.innerHTML = category.restCategory;
+    });
+  } catch (e) {
+    throw e;
+  }
+}
+category();
+
+async function categoryRest(e) {
+  if (checkedMemberList.length == 0) {
+    alert("인원을 선택해주세요.");
+    return;
+  }
+
+  let target = e?.currentTarget;
+  if (target) restCategory = target.value;
+  lastSelectedCategory = this.restCategory;
+  try {
+    const response = await axios.get(`/restaurant/${picked}/category`, {
+      params: {
+        checkedMemberList: checkedMemberList.join(","),
+        restCategory: this.restCategory,
+      },
+    });
+    restList = response.data;
+
+    vectorSource.clear();
+    restList.forEach((rest) => {
+      addIcon(rest.restLon, rest.restLat, lastSelectedCategory);
+      sumLon += rest.restLon * 1;
+      sumLat += rest.restLat * 1;
+    });
+
+    zoomCenter(sumLon / restList.length, sumLat / restList.length);
+
+    vectorSource.addFeature(gaiaIconFeature);
+  } catch(e) {
+    alert(e);
+  }
+}
+
+};

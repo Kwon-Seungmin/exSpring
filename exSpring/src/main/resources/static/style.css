@@ -122,13 +122,13 @@ body {
     z-index: 1;
 }
 
-.evenTable {
+.memberEvenTable {
     width: 50%;
     float: left;
     text-align: center;
 }
 
-.oddTable {
+.memberOddTable {
     width: 50%;
     float: right;
     text-align: center;

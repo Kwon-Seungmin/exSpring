@@ -9,8 +9,7 @@
     <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.14.1/build/ol.js"></script>
     <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.14.1/css/ol.css" type="text/css">
-    <script src="mapvue.js"></script>
-
+    
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -20,35 +19,17 @@
             <div class="grid-1-a">
                 <div id="contentWrap">
                     <div class="searchdiv">
-                        <input placeholder="Search" type="search" class="input" v-model="rest">
-                        <button type="button" id="btnSearch" @click="search">검색</button><br>
+                        <input placeholder="Search" type="search" class="input" id="searchRest">
+                        <button type="button" id="btnSearch">검색</button><br>
                     </div>
                     <div class="memberList">
-                        <table class="evenTable">
-                            <tr v-if="memberList.length > 0" v-for="(member, index) in memberList">
-                                <td v-if="member.memberId % 2 == 0">
-                                    <label>
-                                        <input type="checkbox" name="memberName" :value="member.memberId"
-                                            v-model="checkedMemberList">{{member.memberKrName}}
-                                    </label>
-                                </td>
-                            </tr>
-                        </table>
-                        <table class="oddTable">
-                            <tr v-if="memberList.length > 0" v-for="(member, index) in memberList">
-                                <td v-if="member.memberId % 2 == 1">
-                                    <label>
-                                        <input type="checkbox" name="memberName" :value="member.memberId"
-                                            v-model="checkedMemberList">{{member.memberKrName}}
-                                    </label>
-                                </td>
-                            </tr>
+                        <table class="evenTable" id="memberListTable">
                         </table>
                     </div>
                     <div class="memberControl">
-                        <button type="button" @click="memberClear">선택 해제</button>
-                        <button type="button" value="all" @click="checkAllMembers">전체 선택</button>
-                        <button type="button" @click="recommend">추천하기</button>
+                        <button type="button" id="clearAllMembers" >선택 해제</button>
+                        <button type="button" value="all" onClick="checkAllMembers()">전체 선택</button>
+                        <button type="button" id="btnRecommend">추천하기</button>
                     </div>
                 </div>
             </div>
@@ -56,7 +37,7 @@
             <div class="grid-1-b">
                 <div id="lunchWrap">
                     <div>
-                        <p>{{restList.length}}개 검색</p>
+                        <p><span id="restListLength"></span>개 검색</p>
                         <input type="radio" name="radio" id="radioRP" value="point" v-model="picked"
                             @change="changeRadio">
                         <label for="radioRP">선호도</label>
@@ -64,24 +45,8 @@
                             @change="changeRadio">
                         <label for="radioRD">거리순</label>
                     </div>
-                    <div class="scrolltable">
-                        <table v-if="restList.length>0" v-for="(rest,index) in restList"
-                            class="restTable" :value="rest.restId" :lon="rest.restLon"
-                            :lat="rest.restLat" @click="restClick">
-                            <tr>
-                                <td>
-                                    {{rest.restName}}
-                                </td>
-                                <td style="float: right;">
-                                    {{rest.restCategory}}
-                                </td>
-                            </tr>
-                            <td colspan="2">
-                                {{rest.restAddr}}
-                            </td>
-                            </tr>
-                        </table>
-                        <table v-if="restList.length == 0">
+                    <div class="scrolltable" id="scrolltable">
+                        <table>
                             <tr>
                                 <td>결과 없음</td>
                             </tr>
@@ -94,17 +59,7 @@
         <div class="grid-2">
             <div id="mapCtrlWrap">
                 <div class="btn-group">
-                    <table>
-                        <tr v-if="categoryButton.length>0" v-for="(category, index) in categoryButton">
-                            <td>
-                                <label>
-                                    <button type="button" name="category" :value="category.restCategory"
-                                        @click="categoryRest">
-                                        {{category.restCategory}}
-                                </label>
-                            </td>
-                        </tr>
-                    </table>
+ 
                 </div>
                 <div class="layerBtn">
                     <button type="button" id="btnGeoOn" @click="wmsOn">On</button>
@@ -118,6 +73,7 @@
         </div>
 
     </div>
+    <script src="mapvue.js" type="text/javascript"></script>
 </body>
 
 </html>
