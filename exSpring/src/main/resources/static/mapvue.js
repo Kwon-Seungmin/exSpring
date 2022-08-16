@@ -191,6 +191,7 @@ async function recommend() {
 async function search() {
   let rest = document.getElementById("searchRest").value;
   console.log(rest);
+  console.log('1');
   try {
     const response = await axios.get("/restaurant/search", {
       params: {
@@ -329,7 +330,7 @@ document.querySelector(".memberList").appendChild(memberOddTable);
 
 async function selectMember() {
   try {
-    const response = await axios.get("/member", { parmas: {} });
+    const response = await axios.get("/member");
     memberList = response.data;
 
     setMemberList(memberList);
