@@ -191,8 +191,8 @@ async function recommend() {
 async function search() {
   let rest = document.getElementById("searchRest").value;
   console.log(rest);
+  console.log('1');
   try {
-    console.log('1');
     const response = await axios.get("/restaurant/search", {
       params: {
         rest: rest,
