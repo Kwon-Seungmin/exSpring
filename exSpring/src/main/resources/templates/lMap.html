@@ -6,10 +6,10 @@
     <title>Title</title>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.14.1/build/ol.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.15.1/build/ol.js"></script>
     <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.14.1/css/ol.css" type="text/css">
-    
+        href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.15.1/css/ol.css" type="text/css">
+    <script src="mapvue.js" type="text/javascript"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -27,8 +27,8 @@
                         </table>
                     </div>
                     <div class="memberControl">
-                        <button type="button" id="clearAllMembers" >선택 해제</button>
-                        <button type="button" value="all" onClick="checkAllMembers()">전체 선택</button>
+                        <button type="button" id="btnAllClear">선택 해제</button>
+                        <button type="button" id="btnAllCheck">전체 선택</button>
                         <button type="button" id="btnRecommend">추천하기</button>
                     </div>
                 </div>
@@ -38,12 +38,10 @@
                 <div id="lunchWrap">
                     <div>
                         <p><span id="restListLength"></span>개 검색</p>
-                        <input type="radio" name="radio" id="radioRP" value="point" v-model="picked"
-                            @change="changeRadio">
-                        <label for="radioRP">선호도</label>
-                        <input type="radio" name="radio" id="radioRD" value="distance" v-model="picked"
-                            @change="changeRadio">
-                        <label for="radioRD">거리순</label>
+                        <input type="radio" name="radio" id="point">
+                        <label for="point">선호도</label>
+                        <input type="radio" name="radio" id="distance">
+                        <label for="distance">거리순</label>
                     </div>
                     <div class="scrolltable" id="scrolltable">
                         <table>
@@ -59,21 +57,21 @@
         <div class="grid-2">
             <div id="mapCtrlWrap">
                 <div class="btn-group">
- 
+
                 </div>
                 <div class="layerBtn">
-                    <button type="button" id="btnGeoOn" @click="wmsOn">On</button>
-                    <button type="button" id="btnGeoOff" @click="wmsOff">Off</button>
+                    <button type="button" id="btnGeoOn">On</button>
+                    <button type="button" id="btnGeoOff">Off</button>
                 </div>
                 <div class="gaiaBtn">
-                    <button type="button" id="btnGaia" @click="gaiaOn">Gaia3D</button>
+                    <button type="button" id="btnGaia">Gaia3D</button>
                 </div>
             </div>
             <div class="map" id="map"></div>
         </div>
 
     </div>
-    <script src="mapvue.js" type="text/javascript"></script>
+
 </body>
 
 </html>
