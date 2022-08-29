@@ -1,4 +1,4 @@
-window.onload = function () {
+window.onload = function() {
   let sumLon = 0;
   let sumLat = 0;
 
@@ -149,27 +149,8 @@ window.onload = function () {
   }
   function wmsLayerOff() {
     wms.setVisible(false);
-    isCheckedMember();
-    console.log(lunchMemberList);
   }
-
   //---------------------------------------------
-
-  document.getElementById("btnSearch").addEventListener("click", search);
-  document
-    .getElementById("btnClearAll")
-    .addEventListener("click", clearAllMember);
-  document
-    .getElementById("btnAddAll")
-    .addEventListener("click", addAllMember);
-  document.getElementById("btnRecommend").addEventListener("click", recommend);
-  document.getElementById("searchCriteriaRadio").addEventListener("click", changeRadio);
-  document.getElementById("btnGeoOn").addEventListener("click", wmsLayerOn);
-  document.getElementById("btnGeoOff").addEventListener("click", wmsLayerOff);
-  document.getElementById("btnGaia").addEventListener("click", zoomGaia);
-  
-
-
 
   let memberList = [];
   let lastSelectedCategory = "";
@@ -179,6 +160,18 @@ window.onload = function () {
   let categoryButton = [];
   let lunchMemberList = [];
 
+  document.getElementById("btnSearch").addEventListener("click", search);
+  document
+    .getElementById("btnClearAll")
+    .addEventListener("click", clearAllMember);
+  document
+    .getElementById("btnAddAll")
+    .addEventListener("click", addAllMember);
+  document.getElementById("btnRecommend").addEventListener("click", recommend);
+  document.getElementById("searchCriteriaRadio").addEventListener("change", changeRadio);
+  document.getElementById("btnGeoOn").addEventListener("click", wmsLayerOn);
+  document.getElementById("btnGeoOff").addEventListener("click", wmsLayerOff);
+  document.getElementById("btnGaia").addEventListener("click", zoomGaia);
   async function getMemberList() {
     try {
       const response = await axios.get("/member");
@@ -283,7 +276,6 @@ window.onload = function () {
       }
       vectorSource.clear();
       restList.forEach((rest) => {
-        console.log(rest.restLon);
         addIcon(rest.restLon, rest.restLat, rest.restCategory);
         sumLon += rest.restLon * 1;
         sumLat += rest.restLat * 1;
@@ -379,25 +371,21 @@ window.onload = function () {
 
   //라디오버튼 확인
   function checkRadio() {
-    if (document.querySelector(".searchCriteriaRadio .point").checked){
+    if (document.getElementById("point").checked){
       searchCriteria = "point";
-    } else if(documnet.getElementById("distance").checked){
+    } else if(document.getElementById("distance").checked){
       searchCriteria = "distance";
     } 
   }
+
   function changeRadio() {
-    if (document.getElementById("point").checked){
-      searchCriteria = "point";
+    checkRadio();
+    if (lastSelectedCategory == "") {
+      recommend();
     }
-    console.log(searchCriteria);
-    // if (lastSelectedCategory == "") {
-    //   recommend();
-    //   return;
-    // }
-    // if (lastSelectedCategory != "") {
-    //   categoryRest();
-    //   return;
-    // }
+    if (lastSelectedCategory != "") {
+      categoryRest(lastSelectedCategory);
+    }
   }
 
   const categoryTable = document.createElement("table");
@@ -422,7 +410,7 @@ window.onload = function () {
         categoryBtn.setAttribute("name", "category");
         categoryBtn.setAttribute("id", category.restCategory);
 
-        categoryBtn.addEventListener("click", categoryRest);
+        categoryBtn.addEventListener("click", setLastSelectedCategory);
 
         categoryTd.appendChild(categoryBtn);
         categoryBtn.innerHTML = category.restCategory;
@@ -433,21 +421,24 @@ window.onload = function () {
   }
   category();
 
-  async function categoryRest(e) {
+  function setLastSelectedCategory(e) {
+    lastSelectedCategory = e.currentTarget.getAttribute("id");
+    categoryRest(lastSelectedCategory);
+  }
+
+  async function categoryRest(a) {
+    checkRadio();
     checkLunchMemberList();
     if (lunchMemberList.length == 0) {
       alert("인원을 선택해주세요.");
       return;
     }
 
-    let target = e.currentTarget.getAttribute("id");
-    lastSelectedCategory = target;
-    console.log(e.currentTarget.getAttribute("id"));
     try {
       const response = await axios.get(`/restaurant/${searchCriteria}/category`, {
         params: {
           lunchMemberList: lunchMemberList.join(","),
-          restCategory: target,
+          restCategory: a,
         },
       });
       restList = response.data;
