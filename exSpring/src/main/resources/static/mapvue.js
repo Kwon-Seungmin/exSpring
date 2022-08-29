@@ -149,30 +149,35 @@ window.onload = function () {
   }
   function wmsLayerOff() {
     wms.setVisible(false);
-    console.log(checkedMemberList);
+    isCheckedMember();
+    console.log(lunchMemberList);
   }
 
   //---------------------------------------------
 
   document.getElementById("btnSearch").addEventListener("click", search);
   document
-    .getElementById("btnAllClear")
+    .getElementById("btnClearAll")
     .addEventListener("click", clearAllMember);
   document
-    .getElementById("btnAllCheck")
-    .addEventListener("click", checkAllMember);
+    .getElementById("btnAddAll")
+    .addEventListener("click", addAllMember);
   document.getElementById("btnRecommend").addEventListener("click", recommend);
+  document.getElementById("searchCriteriaRadio").addEventListener("click", changeRadio);
   document.getElementById("btnGeoOn").addEventListener("click", wmsLayerOn);
   document.getElementById("btnGeoOff").addEventListener("click", wmsLayerOff);
   document.getElementById("btnGaia").addEventListener("click", zoomGaia);
+  
+
+
 
   let memberList = [];
   let lastSelectedCategory = "";
-  let picked = "point";
+  let searchCriteria = "point";
   let restList = [];
-  let restCategory = "";
+  let menuList = [];
   let categoryButton = [];
-  let checkedMemberList = [];
+  let lunchMemberList = [];
 
   async function getMemberList() {
     try {
@@ -212,7 +217,7 @@ window.onload = function () {
 
       memberLabel.innerHTML += member.memberKrName;
 
-      checkedMemberList.push(member.memberId);
+      lunchMemberList.push(member.memberId);
       if (member.memberId % 2 == 0) {
         memberEvenTable.appendChild(memberTr);
       } else if (member.memberId % 2 == 1) {
@@ -227,14 +232,24 @@ window.onload = function () {
     memberList.forEach(function (member) {
       document.getElementById(member.memberId).checked = false;
     });
-    checkedMemberList = [];
+    lunchMemberList = [];
   }
 
-  function checkAllMember() {
+  function addAllMember() {
     memberList.forEach(function (member) {
       document.getElementById(member.memberId).checked = true;
-      checkedMemberList.push(member.memberId);
+      lunchMemberList.push(member.memberId);
     });
+  }
+
+  function checkLunchMemberList(){
+    lunchMemberList = [];
+    memberList.forEach(function (member) {
+      if (document.getElementById(member.memberId).checked == 1){
+
+      lunchMemberList.push(member.memberId);
+      }
+    })
   }
 
   async function search() {
@@ -248,7 +263,7 @@ window.onload = function () {
         alert("식당 명을 입력해주세요.");
         return;
       }
-
+      
       restList = response.data;
 
       if (restList.length == 0) {
@@ -266,10 +281,16 @@ window.onload = function () {
         alert("검색 결과가 없습니다.");
         return;
       }
+      vectorSource.clear();
       restList.forEach((rest) => {
         console.log(rest.restLon);
         addIcon(rest.restLon, rest.restLat, rest.restCategory);
+        sumLon += rest.restLon * 1;
+        sumLat += rest.restLat * 1;
       });
+      zoomCenter(sumLon / restList.length, sumLat / restList.length);
+
+      vectorSource.addFeature(gaiaIconFeature);
       makeRestTable(restList);
       document.getElementById("restListLength").innerHTML = restList.length;
     } catch (e) {
@@ -278,11 +299,13 @@ window.onload = function () {
   }
 
   async function recommend() {
+    checkLunchMemberList();
+    checkRadio();
     lastSelectedCategory = "";
     try {
-      const response = await axios.get(`/restaurant/${picked}/member`, {
+      const response = await axios.get(`/restaurant/${searchCriteria}/member`, {
         params: {
-          checkedMemberList: checkedMemberList.join(","),
+          lunchMemberList: lunchMemberList.join(","),
         },
       });
 
@@ -297,16 +320,22 @@ window.onload = function () {
       zoomCenter(sumLon / restList.length, sumLat / restList.length);
 
       vectorSource.addFeature(gaiaIconFeature);
+      makeRestTable(restList);
     } catch (e) {
       alert(e);
     }
   }
 
   function makeRestTable(a) {
+    document.getElementById("restListLength").innerHTML = a.length;
     document.getElementById("scrolltable").innerHTML = "";
     a.forEach((rest) => {
       const restTable = document.createElement("table");
       restTable.classList.add("restTable");
+      restTable.setAttribute("id", rest.restId);
+      restTable.setAttribute("lon", rest.restLon);
+      restTable.setAttribute("lat", rest.restLat);
+
       restTable.addEventListener("click", restClick);
 
       document.getElementById("scrolltable").appendChild(restTable);
@@ -331,13 +360,12 @@ window.onload = function () {
   }
 
   async function restClick(e) {
-    console.log(e.currentTarget.getAttribute("lon"));
     let menuLon = e.currentTarget.getAttribute("lon");
     let menuLat = e.currentTarget.getAttribute("lat");
     try {
       const response = await axios.get("/menu", {
         params: {
-          restId: e.currentTarget.getAttribute("value"),
+          restId: e.currentTarget.getAttribute("id"),
         },
       });
 
@@ -349,16 +377,27 @@ window.onload = function () {
     }
   }
 
+  //라디오버튼 확인
+  function checkRadio() {
+    if (document.querySelector(".searchCriteriaRadio .point").checked){
+      searchCriteria = "point";
+    } else if(documnet.getElementById("distance").checked){
+      searchCriteria = "distance";
+    } 
+  }
   function changeRadio() {
-    //최근 목록 출처
-    if (lastSelectedCategory == "") {
-      recommend();
-      return;
+    if (document.getElementById("point").checked){
+      searchCriteria = "point";
     }
-    if (lastSelectedCategory != "") {
-      categoryRest();
-      return;
-    }
+    console.log(searchCriteria);
+    // if (lastSelectedCategory == "") {
+    //   recommend();
+    //   return;
+    // }
+    // if (lastSelectedCategory != "") {
+    //   categoryRest();
+    //   return;
+    // }
   }
 
   const categoryTable = document.createElement("table");
@@ -383,12 +422,10 @@ window.onload = function () {
         categoryBtn.setAttribute("name", "category");
         categoryBtn.setAttribute("id", category.restCategory);
 
+        categoryBtn.addEventListener("click", categoryRest);
+
         categoryTd.appendChild(categoryBtn);
         categoryBtn.innerHTML = category.restCategory;
-
-        document
-          .getElementById(category.restCategory)
-          .addEventListener("click", categoryRest);
       });
     } catch (e) {
       throw e;
@@ -397,19 +434,20 @@ window.onload = function () {
   category();
 
   async function categoryRest(e) {
-    if (checkedMemberList.length == 0) {
+    checkLunchMemberList();
+    if (lunchMemberList.length == 0) {
       alert("인원을 선택해주세요.");
       return;
     }
 
-    let target = e?.currentTarget;
-    if (target) restCategory = target.value;
-    lastSelectedCategory = restCategory;
+    let target = e.currentTarget.getAttribute("id");
+    lastSelectedCategory = target;
+    console.log(e.currentTarget.getAttribute("id"));
     try {
-      const response = await axios.get(`/restaurant/${picked}/category`, {
+      const response = await axios.get(`/restaurant/${searchCriteria}/category`, {
         params: {
-          checkedMemberList: checkedMemberList.join(","),
-          restCategory: restCategory,
+          lunchMemberList: lunchMemberList.join(","),
+          restCategory: target,
         },
       });
       restList = response.data;
@@ -420,6 +458,7 @@ window.onload = function () {
         sumLon += rest.restLon * 1;
         sumLat += rest.restLat * 1;
       });
+      makeRestTable(restList);
 
       zoomCenter(sumLon / restList.length, sumLat / restList.length);
 

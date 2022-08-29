@@ -22,12 +22,12 @@ public class RestaurantService {
 		return mapper.selectRestaurantByName(searchRest);
 	}
 
-	public List<RestaurantDTO> selectRestaurantByPointAndMember(String[] checkedMemberList) {
-		return mapper.selectRestaurantByPointAndMember(checkedMemberList);
+	public List<RestaurantDTO> selectRestaurantByPointAndMember(String[] lunchMemberList) {
+		return mapper.selectRestaurantByPointAndMember(lunchMemberList);
 	}
 
-	public List<RestaurantDTO> selectRestaurantByDistanceAndMember(String[] checkedMemberList) {
-		return mapper.selectRestaurantByDistanceAndMember(checkedMemberList);
+	public List<RestaurantDTO> selectRestaurantByDistanceAndMember(String[] lunchMemberList) {
+		return mapper.selectRestaurantByDistanceAndMember(lunchMemberList);
 	}
 
 	public List<RestaurantDTO> selectRestaurantByPointAndCategory(SearchDTO search) {

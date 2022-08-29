@@ -13,9 +13,9 @@ public interface RestaurantMapper {
 
 	List<RestaurantDTO> selectRestaurantByName(String searchRest);
 
-	List<RestaurantDTO> selectRestaurantByPointAndMember(String[] checkedMemberList);
+	List<RestaurantDTO> selectRestaurantByPointAndMember(String[] lunchMemberList);
 
-	List<RestaurantDTO> selectRestaurantByDistanceAndMember(String[] checkedMembersList);
+	List<RestaurantDTO> selectRestaurantByDistanceAndMember(String[] lunchMemberList);
 
 	List<RestaurantDTO> selectRestaurantByPointAndCategory(SearchDTO search);
 

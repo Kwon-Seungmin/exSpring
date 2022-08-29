@@ -32,33 +32,33 @@ public class LunchController {
 
 	// 선호도추천_멤버
 	@GetMapping("/point/member")
-	public ResponseEntity<?> selectRestaurantByPointAndMember(@RequestParam String[] checkedMemberList) {
-		List<RestaurantDTO> list = restaurantService.selectRestaurantByPointAndMember(checkedMemberList);
+	public ResponseEntity<?> selectRestaurantByPointAndMember(@RequestParam String[] lunchMemberList) {
+		List<RestaurantDTO> list = restaurantService.selectRestaurantByPointAndMember(lunchMemberList);
 		return ResponseEntity.ok(list);
 	}
 
 	// 거리순추천_멤버
 	@GetMapping("/distance/member")
-	public ResponseEntity<?> selectRestaurantByDistanceAndMember(@RequestParam String[] checkedMemberList) {
-		List<RestaurantDTO> list = restaurantService.selectRestaurantByDistanceAndMember(checkedMemberList);
+	public ResponseEntity<?> selectRestaurantByDistanceAndMember(@RequestParam String[] lunchMemberList) {
+		List<RestaurantDTO> list = restaurantService.selectRestaurantByDistanceAndMember(lunchMemberList);
 		return ResponseEntity.ok(list);
 	}
 
 	// 선호도추천_카테고리
 	@GetMapping("/point/category")
-	public ResponseEntity<?> selectRestaurantByPointAndCategory(@RequestParam String[] checkedMemberList,
+	public ResponseEntity<?> selectRestaurantByPointAndCategory(@RequestParam String[] lunchMemberList,
 			@RequestParam String restCategory) {
 
-		SearchDTO search = new SearchDTO(checkedMemberList, restCategory);
+		SearchDTO search = new SearchDTO(lunchMemberList, restCategory);
 		List<RestaurantDTO> list = restaurantService.selectRestaurantByPointAndCategory(search);
 		return ResponseEntity.ok(list);
 	}
 
 	// 거리순추천_카테고리
 	@GetMapping("/distance/category")
-	public ResponseEntity<?> selectRestaurantByDistanceAndCategory(@RequestParam String[] checkedMemberList,
+	public ResponseEntity<?> selectRestaurantByDistanceAndCategory(@RequestParam String[] lunchMemberList,
 			@RequestParam String restCategory) {
-		SearchDTO search = new SearchDTO(checkedMemberList, restCategory);
+		SearchDTO search = new SearchDTO(lunchMemberList, restCategory);
 		List<RestaurantDTO> list = restaurantService.selectRestaurantByDistanceAndCategory(search);
 		System.out.println(list);
 		return ResponseEntity.ok(list);

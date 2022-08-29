@@ -27,8 +27,8 @@
                         </table>
                     </div>
                     <div class="memberControl">
-                        <button type="button" id="btnAllClear">선택 해제</button>
-                        <button type="button" id="btnAllCheck">전체 선택</button>
+                        <button type="button" id="btnClearAll">선택 해제</button>
+                        <button type="button" id="btnAddAll">전체 선택</button>
                         <button type="button" id="btnRecommend">추천하기</button>
                     </div>
                 </div>
@@ -36,12 +36,10 @@
 
             <div class="grid-1-b">
                 <div id="lunchWrap">
-                    <div>
-                        <p><span id="restListLength"></span>개 검색</p>
-                        <input type="radio" name="radio" id="point">
-                        <label for="point">선호도</label>
-                        <input type="radio" name="radio" id="distance">
-                        <label for="distance">거리순</label>
+                    <p><span id="restListLength"></span>개 검색</p>
+                    <div id="searchCriteriaRadio">
+                        <input type="radio" name="radio" id="point" checked="true"> <label for="point">선호도</label> 
+                        <input type="radio" name="radio" id="distance"> <label for="distance">거리순</label>
                     </div>
                     <div class="scrolltable" id="scrolltable">
                         <table>
@@ -56,9 +54,7 @@
 
         <div class="grid-2">
             <div id="mapCtrlWrap">
-                <div class="btn-group">
-
-                </div>
+                <div class="btn-group"></div>
                 <div class="layerBtn">
                     <button type="button" id="btnGeoOn">On</button>
                     <button type="button" id="btnGeoOff">Off</button>

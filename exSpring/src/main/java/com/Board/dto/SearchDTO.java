@@ -5,11 +5,11 @@ import lombok.Getter;
 @Getter
 
 public class SearchDTO {
-	String[] checkedMemberList;
+	String[] lunchMemberList;
 	String restCategory;
 
-	public SearchDTO(String[] checkedMemberList, String restCategory) {
-		this.checkedMemberList = checkedMemberList;
+	public SearchDTO(String[] lunchMemberList, String restCategory) {
+		this.lunchMemberList = lunchMemberList;
 		this.restCategory = restCategory;
 	}
 

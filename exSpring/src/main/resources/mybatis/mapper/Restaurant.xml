@@ -125,13 +125,13 @@
                 FROM rest r
                 LEFT JOIN member_hate mh ON (r.rest_id = mh.rest_id and mh.member_id in
                         <foreach item="member" index="index"
-                        collection="checkedMemberList" open="(" separator="," close=")">
+                        collection="lunchMemberList" open="(" separator="," close=")">
                         #{member}
                         </foreach>
                         )
                 LEFT JOIN member_like ml ON (r.rest_id = ml.rest_id and ml.member_id in
                         <foreach item="member" index="index"
-                        collection="checkedMemberList" open="(" separator="," close=")">
+                        collection="lunchMemberList" open="(" separator="," close=")">
                         #{member}
                         </foreach>
                         )
@@ -169,13 +169,13 @@
                 FROM rest r
                 LEFT JOIN member_hate mh ON (r.rest_id = mh.rest_id and mh.member_id in
                           <foreach item="member" index="index"
-                          collection="checkedMemberList" open="(" separator="," close=")">
+                          collection="lunchMemberList" open="(" separator="," close=")">
                           #{member}
                           </foreach>
                         )
                 LEFT JOIN member_like ml ON (r.rest_id = ml.rest_id and ml.member_id in
                           <foreach item="member" index="index"
-                          collection="checkedMemberList" open="(" separator="," close=")">
+                          collection="lunchMemberList" open="(" separator="," close=")">
                           #{member}
                           </foreach>
                           )
